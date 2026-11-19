@@ -1,5 +1,4 @@
 import AboutUsSection from "@/components/modules/Home/AboutUs";
-import FeatureAds from "@/components/modules/Home/Ads";
 import BlogSection from "@/components/modules/Home/Blog";
 import CategorySection from "@/components/modules/Home/Category";
 import HeroSection from "@/components/modules/Home/HeroSection";
@@ -18,7 +17,6 @@ export default function HomePage() {
       <CategorySection />
       <ProductSection />
       <HowItWorksSection />
-      <FeatureAds />
       <ProductOffer />
       <BlogSection />
       <NewsletterSection />

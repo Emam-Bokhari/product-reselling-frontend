@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/shared/Container";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 // Assets
 import property from "@/assets/property.png";

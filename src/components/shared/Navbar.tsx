@@ -67,7 +67,6 @@ import {
   Search,
   ShieldCheck,
   ShoppingBag,
-  Sparkles,
   Tag,
   User,
   UserPlus,
