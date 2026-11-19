@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/shared/Container";
-import SectionTitle from "@/components/shared/SectionTitle";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 // Assets
 import property from "@/assets/property.png";
@@ -29,10 +29,35 @@ const categories = [
 
 export default function CategorySection() {
   return (
-    <section className="mt-8 sm:mt-10">
+    <section className="mt-10 sm:mt-14">
       <Container>
-        <div className="mb-4">
-          <SectionTitle title="Shop by Category" />
+        {/* Professional Header matching site theme & card grid */}
+        <div className="max-w-6xl mx-auto mb-5 sm:mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+            <div>
+              {/* Brand Accent Pill */}
+            
+
+              {/* Section Headline */}
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1F2937] dark:text-white tracking-tight leading-tight">
+                Shop by <span className="text-[#F59E0B]">Category</span>
+              </h2>
+
+              {/* Marketplace Subtitle */}
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-neutral-400 mt-1">
+                Explore verified pre-loved products by department across Bangladesh
+              </p>
+            </div>
+
+            {/* Quick Action Link */}
+            <Link
+              href="/products"
+              className="group inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-600 dark:text-neutral-300 hover:text-[#F59E0B] dark:hover:text-[#F59E0B] transition-colors self-start sm:self-end shrink-0 pb-0.5"
+            >
+              <span>View All Products</span>
+              <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1 text-[#F59E0B]" />
+            </Link>
+          </div>
         </div>
 
         {/* Categories Card Grid - Compact bordered grid matching reference screenshot */}
