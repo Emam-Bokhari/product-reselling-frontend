@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useMemo, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useAppDispatch } from "@/redux/hooks";
@@ -304,6 +304,22 @@ export const MegaMenu = ({ onClose }: { onClose?: () => void }) => {
   );
 };
 
+function NavbarSearchSync({ onSync }: { onSync: (query: string) => void }) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (pathname === "/products") {
+      const q = searchParams.get("search");
+      if (q !== null) {
+        onSync(q);
+      }
+    }
+  }, [searchParams, pathname, onSync]);
+
+  return null;
+}
+
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
@@ -317,7 +333,56 @@ export default function Navbar() {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [allProducts, setAllProducts] = useState<TProduct[]>([]);
+  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    getAllProducts()
+      .then((res) => {
+        if (isMounted && res?.data) {
+          setAllProducts(res.data);
+        }
+      })
+      .catch((err) => {
+        console.error("Navbar products fetch error:", err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target as Node)
+      ) {
+        setIsSearchDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const searchResults = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q || allProducts.length === 0) return [];
+    return allProducts
+      .filter((p) =>
+        [p.title, p.category, p.location, p.brand, p.description].some((field) =>
+          field?.toLowerCase().includes(q)
+        )
+      )
+      .slice(0, 5);
+  }, [searchQuery, allProducts]);
 
   const handleLogout = async () => {
     dispatch(logout());
@@ -325,14 +390,17 @@ export default function Navbar() {
     router.push("/");
   };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+  const handleSearch = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const query = searchQuery.trim();
+    if (query) {
+      router.push(`/products?search=${encodeURIComponent(query)}`);
     } else {
       router.push("/products");
     }
     setMobileOpen(false);
+    setIsMobileSearchOpen(false);
+    setIsSearchDropdownOpen(false);
   };
 
   useEffect(() => {
@@ -361,6 +429,10 @@ export default function Navbar() {
 
   return (
     <div className="w-full">
+      <Suspense fallback={null}>
+        <NavbarSearchSync onSync={setSearchQuery} />
+      </Suspense>
+
       {/* Top Utility Bar (Desktop only) */}
       <div className="hidden md:block bg-slate-900 text-slate-300 text-xs py-2 border-b border-slate-800">
         <Container>
@@ -488,29 +560,143 @@ export default function Navbar() {
 
             {/* Right: Search, Wishlist, Post Ad CTA & User Profile */}
             <div className="flex items-center gap-2 sm:gap-3">
-              {/* Search Bar - Desktop */}
-              <form
-                onSubmit={handleSearch}
-                className="hidden xl:flex items-center relative"
-              >
-                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" />
-                <Input
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-52 lg:w-64 h-9 pl-9 pr-8 text-xs bg-slate-100/80 hover:bg-slate-100 focus:bg-white rounded-full border border-slate-200/80 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all placeholder:text-slate-400 shadow-none"
-                />
-                {searchQuery && (
+              {/* Search Bar - Desktop & Tablet */}
+              <div ref={searchContainerRef} className="hidden md:flex items-center relative">
+                <form
+                  onSubmit={handleSearch}
+                  className="relative flex items-center"
+                >
                   <button
-                    type="button"
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-3 text-slate-400 hover:text-slate-600"
+                    type="submit"
+                    className="absolute left-3 text-slate-400 hover:text-amber-600 transition-colors cursor-pointer p-0.5"
+                    aria-label="Submit search"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <Search className="w-4 h-4" />
                   </button>
+                  <Input
+                    type="text"
+                    placeholder="Search products..."
+                    value={searchQuery}
+                    onFocus={() => {
+                      if (searchQuery.trim().length > 0) {
+                        setIsSearchDropdownOpen(true);
+                      }
+                    }}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setIsSearchDropdownOpen(e.target.value.trim().length > 0);
+                    }}
+                    className="w-40 sm:w-48 lg:w-48 xl:w-64 h-9 pl-9 pr-8 text-xs bg-slate-100/80 hover:bg-slate-100 focus:bg-white rounded-full border border-slate-200/80 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all placeholder:text-slate-400 shadow-none"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery("");
+                        setIsSearchDropdownOpen(false);
+                      }}
+                      className="absolute right-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+                      aria-label="Clear search input"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </form>
+
+                {/* Instant Search Results Dropdown */}
+                {isSearchDropdownOpen && searchQuery.trim().length > 0 && (
+                  <div className="absolute top-full mt-2 right-0 sm:left-0 sm:right-auto w-72 sm:w-80 md:w-96 bg-white rounded-2xl shadow-2xl border border-slate-100 p-3 z-50 animate-in fade-in-50 zoom-in-95 duration-150">
+                    <div className="flex items-center justify-between px-2 py-1 mb-1 border-b border-slate-100 text-[11px] text-slate-400 font-semibold uppercase tracking-wider">
+                      <span>Matching Products</span>
+                      <span>
+                        {searchResults.length > 0
+                          ? `${searchResults.length} preview`
+                          : "0 found"}
+                      </span>
+                    </div>
+
+                    {searchResults.length > 0 ? (
+                      <div className="space-y-1">
+                        {searchResults.map((prod) => (
+                          <Link
+                            key={prod._id}
+                            href={`/products/${prod._id}`}
+                            onClick={() => {
+                              setIsSearchDropdownOpen(false);
+                            }}
+                            className="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50/70 transition-colors group"
+                          >
+                            <div className="w-10 h-10 relative rounded-lg overflow-hidden bg-slate-100 shrink-0 border border-slate-200/60">
+                              {prod.images?.[0] ? (
+                                <Image
+                                  src={prod.images[0]}
+                                  alt={prod.title}
+                                  fill
+                                  className="object-cover group-hover:scale-105 transition-transform"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-slate-400 text-[10px]">
+                                  Item
+                                </div>
+                              )}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-xs font-semibold text-slate-800 truncate group-hover:text-amber-600">
+                                {prod.title}
+                              </p>
+                              <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-0.5">
+                                <span className="font-bold text-amber-600">
+                                  ৳{prod.price?.toLocaleString()}
+                                </span>
+                                <span className="capitalize">• {prod.category}</span>
+                                {prod.location && (
+                                  <span className="capitalize text-[10px] text-slate-400 truncate">
+                                    • {prod.location}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </Link>
+                        ))}
+
+                        <button
+                          type="button"
+                          onClick={() => handleSearch()}
+                          className="w-full mt-2 pt-2 border-t border-slate-100 text-center text-xs font-semibold text-amber-600 hover:text-amber-700 py-1 hover:underline flex items-center justify-center gap-1 cursor-pointer"
+                        >
+                          <span>View all results for &ldquo;{searchQuery}&rdquo;</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="py-4 text-center">
+                        <p className="text-xs text-slate-500">
+                          No matching preview found for &ldquo;{searchQuery}&rdquo;
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => handleSearch()}
+                          className="mt-2 text-xs font-semibold text-amber-600 hover:underline inline-flex items-center gap-1 cursor-pointer"
+                        >
+                          <span>Search across all products</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 )}
-              </form>
+              </div>
+
+              {/* Mobile Search Toggle Button */}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsMobileSearchOpen((prev) => !prev)}
+                className="md:hidden rounded-full hover:bg-slate-100 text-slate-700 h-9 w-9 cursor-pointer"
+                aria-label="Toggle mobile search"
+              >
+                <Search className="w-4 h-4" />
+              </Button>
 
               {/* Wishlist Button */}
               <Link
@@ -723,7 +909,13 @@ export default function Navbar() {
                   <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
                     {/* Search Input in Mobile Drawer */}
                     <form onSubmit={handleSearch} className="relative">
-                      <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <button
+                        type="submit"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-600 cursor-pointer p-0.5"
+                        aria-label="Search"
+                      >
+                        <Search className="w-4 h-4" />
+                      </button>
                       <Input
                         type="text"
                         placeholder="Search products..."
@@ -736,6 +928,7 @@ export default function Navbar() {
                           type="button"
                           onClick={() => setSearchQuery("")}
                           className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                          aria-label="Clear search"
                         >
                           <X className="w-3.5 h-3.5" />
                         </button>
@@ -959,6 +1152,39 @@ export default function Navbar() {
             </div>
           </div>
         </Container>
+
+        {/* Mobile Search Bar Collapsible Panel */}
+        {isMobileSearchOpen && (
+          <div className="md:hidden px-4 py-2.5 bg-slate-50 border-t border-slate-200/80 animate-in slide-in-from-top-2 duration-150">
+            <form onSubmit={handleSearch} className="relative flex items-center">
+              <button
+                type="submit"
+                className="absolute left-3 text-slate-400 hover:text-amber-600 p-0.5 cursor-pointer"
+                aria-label="Submit search"
+              >
+                <Search className="w-4 h-4" />
+              </button>
+              <Input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                autoFocus
+                className="w-full h-9 pl-9 pr-9 text-xs bg-white rounded-full border border-slate-200 focus:border-amber-500 shadow-none"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  aria-label="Clear search"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </form>
+          </div>
+        )}
       </header>
     </div>
   );

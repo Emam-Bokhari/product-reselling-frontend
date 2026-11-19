@@ -1,14 +1,23 @@
 import AllProducts from "@/components/modules/Products";
 import { getAllProducts } from "@/services/Product";
 import { TProduct } from "@/types";
-import { Fragment } from "react";
+import { Fragment, Suspense } from "react";
 
 export default async function ProductsPage() {
-  const { data: products }: { data: TProduct[] } = await getAllProducts();
+  const res = await getAllProducts();
+  const products: TProduct[] = res?.data || [];
 
   return (
     <Fragment>
-      <AllProducts products={products} />
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500" />
+          </div>
+        }
+      >
+        <AllProducts products={products} />
+      </Suspense>
     </Fragment>
   );
 }
