@@ -6,6 +6,7 @@ import HowItWorksSection from "@/components/modules/Home/HowItWorks";
 import NewsletterSection from "@/components/modules/Home/NewsLetter";
 import ProductSection from "@/components/modules/Home/Product";
 import ProductOffer from "@/components/modules/Home/ProductOffer";
+import ScrollToTop from "@/components/shared/ScrollToTop";
 
 import { Fragment } from "react";
 
@@ -20,6 +21,7 @@ export default function HomePage() {
       <ProductOffer />
       <BlogSection />
       <NewsletterSection />
+      <ScrollToTop />
     </Fragment>
   );
 }

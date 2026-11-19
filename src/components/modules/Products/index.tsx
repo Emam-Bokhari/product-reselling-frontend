@@ -7,6 +7,7 @@ import ProductCard from "@/components/ui/core/ProductCard";
 import ProductSkeleton from "@/components/ui/core/skeleton/ProductSkeleton";
 import SidebarFilters from "./SidebarFilters";
 import Container from "@/components/shared/Container";
+import ScrollToTop from "@/components/shared/ScrollToTop";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -30,8 +31,6 @@ import {
   MapPin,
   TrendingDown,
   Loader2,
-  ArrowUp,
-  CheckCircle2,
 } from "lucide-react";
 
 interface AllProductsProps {
@@ -65,28 +64,6 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
   const ITEMS_PER_BATCH = 6;
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_BATCH);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [showBackToTop, setShowBackToTop] = useState(false);
-
-  // Floating back to top visibility listener
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 400) {
-        setShowBackToTop(true);
-      } else {
-        setShowBackToTop(false);
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    if (productsTopRef.current) {
-      productsTopRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
 
   // Sync with URL query parameters (?search=..., ?category=..., ?location=...)
   useEffect(() => {
@@ -661,7 +638,6 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
                   </div>
                 ) : (
                   <span className="text-slate-500 font-medium text-xs flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
                     All Available Listings
                   </span>
                 )}
@@ -735,8 +711,7 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
                 {/* END OF RESULTS MESSAGE */}
                 {!hasMore && totalItems > ITEMS_PER_BATCH && (
                   <div className="mt-12 py-8 border-t border-slate-200/80 flex flex-col items-center justify-center text-center">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 shadow-2xs">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                    <div className="inline-flex items-center px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 shadow-2xs">
                       <span>You&apos;ve viewed all {totalItems} products</span>
                     </div>
                     <p className="text-[11px] text-slate-400 mt-2">
@@ -836,18 +811,7 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
       </Container>
 
       {/* FLOATING BACK TO TOP BUTTON */}
-      {showBackToTop && (
-        <button
-          type="button"
-          onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-40 p-3 rounded-full bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-500/30 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5 text-xs font-bold"
-          title="Scroll back to top"
-          aria-label="Scroll back to top"
-        >
-          <ArrowUp className="w-4 h-4" />
-          <span className="hidden sm:inline">Top</span>
-        </button>
-      )}
+      <ScrollToTop />
     </div>
   );
 }
