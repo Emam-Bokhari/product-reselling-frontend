@@ -49,26 +49,22 @@ export const CATEGORIES_CONFIG = [
 export const CONDITIONS_CONFIG = [
   {
     id: "new",
-    label: "Brand New",
-    description: "Unused, in original packaging",
+    label: "new",
     dotColor: "bg-emerald-500",
   },
   {
     id: "likeNew",
-    label: "Like New",
-    description: "Barely used, zero flaws",
+    label: "likeNew",
     dotColor: "bg-amber-500",
   },
   {
     id: "used",
-    label: "Pre-owned",
-    description: "Functional with normal wear",
+    label: "used",
     dotColor: "bg-blue-500",
   },
   {
     id: "refurbished",
-    label: "Refurbished",
-    description: "Restored & tested",
+    label: "refurbished",
     dotColor: "bg-purple-500",
   },
 ];

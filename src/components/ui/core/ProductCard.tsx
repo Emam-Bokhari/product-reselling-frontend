@@ -72,34 +72,13 @@ export default function ProductCard({
   const productImage =
     !imageError && images?.[0] ? images[0] : fallbackImage;
 
-  // Format Condition
+  // Render exact condition from backend data
   const renderConditionBadge = () => {
     if (!condition) return null;
-    const clean = condition.toLowerCase().replace(/[\s-_]/g, "");
-
-    let label: string = condition;
-    let badgeStyle = "bg-slate-100 text-slate-700 border-slate-200";
-
-    if (clean === "new") {
-      label = "Brand New";
-      badgeStyle = "bg-emerald-50 text-emerald-700 border-emerald-200/80";
-    } else if (clean === "likenew") {
-      label = "Like New";
-      badgeStyle = "bg-amber-50 text-amber-800 border-amber-200/80";
-    } else if (clean === "used") {
-      label = "Pre-owned";
-      badgeStyle = "bg-blue-50 text-blue-700 border-blue-200/80";
-    } else if (clean === "refurbished") {
-      label = "Refurbished";
-      badgeStyle = "bg-purple-50 text-purple-700 border-purple-200/80";
-    }
 
     return (
-      <span
-        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold border tracking-wide uppercase ${badgeStyle}`}
-      >
-        <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
-        {label}
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold border tracking-wide bg-amber-50 text-amber-800 border-amber-200/80">
+        {condition}
       </span>
     );
   };

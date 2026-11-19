@@ -507,15 +507,9 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
                   {selectedConditions.map((cond) => (
                     <span
                       key={cond}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 capitalize font-medium"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 font-medium"
                     >
-                      <span>
-                        {cond === "likeNew"
-                          ? "Like New"
-                          : cond === "new"
-                          ? "Brand New"
-                          : cond}
-                      </span>
+                      <span>{cond}</span>
                       <button
                         type="button"
                         onClick={() =>
