@@ -54,7 +54,7 @@ export default function ProductCard({ product }: { product: TProduct }) {
     "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600&auto=format&fit=crop";
 
   return (
-    <div className="group relative w-full rounded-[24px] overflow-hidden bg-white shadow-md hover:shadow-xl hover:border-amber-200 transition-all duration-300 flex flex-col justify-between border border-slate-100">
+    <div className="group relative w-full rounded-[24px] overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between border border-slate-100">
       {/* Top Section with Image */}
       <div className="relative w-full h-64 sm:h-72 bg-gray-100 overflow-hidden">
         {/* Sold Badge */}
