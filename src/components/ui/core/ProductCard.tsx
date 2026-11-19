@@ -238,7 +238,7 @@ export default function ProductCard({
      GRID VIEW LAYOUT (Default)
      ============================================================ */
   return (
-    <div className="group relative w-full rounded-2xl overflow-hidden bg-white shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between border border-slate-200/80 hover:border-amber-300/60 hover:-translate-y-1">
+    <div className="group relative w-full rounded-2xl overflow-hidden bg-white shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between border border-slate-200/80 hover:-translate-y-1">
       {/* Top Image Section */}
       <div className="relative w-full h-56 sm:h-60 bg-slate-100 overflow-hidden">
         {/* Top Badges */}
