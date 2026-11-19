@@ -6,11 +6,11 @@ import Link from "next/link";
 import Container from "@/components/shared/Container";
 import { Button } from "@/components/ui/button";
 
-// Assets
+// assets
 import manWorkingImage from "@/assets/man-working.jpg";
 import packagingBoxImage from "@/assets/packaging-box.jpg";
 
-// Icons
+// icons
 import {
   Check,
   Coins,
