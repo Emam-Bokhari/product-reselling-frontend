@@ -197,7 +197,7 @@ export default function BlogDetails({ blog, relatedBlogs = [] }: BlogDetailsProp
           </h1>
 
           {/* Author & Publication Meta Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 py-4 mt-6 border-y border-slate-200/80 dark:border-slate-800">
+          <div className="flex flex-wrap items-center justify-between gap-4 py-2 mt-4">
             {/* Author Avatar & Info */}
             <div className="flex items-center gap-3.5">
               <Avatar className="w-11 h-11 border-2 border-amber-500/20 shadow-xs">
@@ -366,39 +366,36 @@ export default function BlogDetails({ blog, relatedBlogs = [] }: BlogDetailsProp
               ------------------------------------------------------------ */}
           <div className="lg:col-span-4 space-y-6">
             {/* 1. ResellBD Marketplace Promo Card */}
-            <div className="p-6 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-850 to-slate-900 text-white shadow-sm border border-slate-800 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
-              <div className="relative z-10">
-                <span className="inline-block text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-2">
-                  ResellBD Marketplace
-                </span>
-                <h3 className="text-lg font-bold leading-snug">
-                  Buy &amp; Sell Used Gadgets Safely in Bangladesh
-                </h3>
-                <p className="text-xs text-slate-300 mt-2.5 leading-relaxed">
-                  Looking for quality second-hand smartphones, laptops, or electronics? Browse verified listings or sell your old device with ease.
-                </p>
+            <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs">
+              <span className="inline-block text-[11px] font-bold text-[#F59E0B] uppercase tracking-wider mb-2">
+                ResellBD Marketplace
+              </span>
+              <h3 className="text-lg font-bold text-[#1F2937] dark:text-white leading-snug">
+                Buy &amp; Sell Used Gadgets Safely in Bangladesh
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+                Looking for quality second-hand smartphones, laptops, or electronics? Browse verified listings or sell your old device with ease.
+              </p>
 
-                <div className="space-y-2 mt-4 pt-4 border-t border-slate-800 text-xs text-slate-300">
-                  <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Verified community listings</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <ShoppingBag className="w-4 h-4 text-amber-400 shrink-0" />
-                    <span>Best prices on pre-owned tech</span>
-                  </div>
+              <div className="space-y-2.5 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
+                  <span>Verified community listings</span>
                 </div>
+                <div className="flex items-center gap-2">
+                  <ShoppingBag className="w-4 h-4 text-[#F59E0B] shrink-0" />
+                  <span>Best prices on pre-owned tech</span>
+                </div>
+              </div>
 
-                <div className="mt-5">
-                  <Link
-                    href="/products"
-                    className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs transition-colors shadow-xs"
-                  >
-                    <span>Explore Products</span>
-                    <ArrowRight className="w-4 h-4 ml-1.5" />
-                  </Link>
-                </div>
+              <div className="mt-5">
+                <Link
+                  href="/products"
+                  className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-xl bg-[#F59E0B] hover:bg-[#D97706] text-white font-bold text-xs transition-colors shadow-xs"
+                >
+                  <span>Explore Products</span>
+                  <ArrowRight className="w-4 h-4 ml-1.5" />
+                </Link>
               </div>
             </div>
 
