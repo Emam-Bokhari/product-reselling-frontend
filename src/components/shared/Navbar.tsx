@@ -428,7 +428,7 @@ export default function Navbar() {
   ];
 
   return (
-    <div className="w-full">
+    <>
       <Suspense fallback={null}>
         <NavbarSearchSync onSync={setSearchQuery} />
       </Suspense>
@@ -483,7 +483,7 @@ export default function Navbar() {
       {/* Main Sticky Header */}
       <header
         className={cn(
-          "sticky top-0 z-40 w-full transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-slate-200/80",
+          "sticky top-0 z-50 w-full transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-slate-200/80",
           isScrolled ? "shadow-md py-2.5" : "py-3.5"
         )}
       >
@@ -1186,6 +1186,6 @@ export default function Navbar() {
           </div>
         )}
       </header>
-    </div>
+    </>
   );
 }
