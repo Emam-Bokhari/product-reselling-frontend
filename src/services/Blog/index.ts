@@ -9,10 +9,14 @@ export const getAllBlogs = async () => {
                 tags: ["BLOG"],
             },
         });
+        if (!res.ok) {
+            const errorText = await res.text();
+            throw new Error(`API request failed with status ${res.status}: ${errorText}`);
+        }
         const data = await res.json();
         return data;
     } catch (error: any) {
-        throw new Error(error);
+        throw new Error(error?.message || error);
     }
 };
 

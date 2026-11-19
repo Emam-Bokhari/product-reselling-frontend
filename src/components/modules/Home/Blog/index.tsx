@@ -5,8 +5,9 @@ import { getAllBlogs } from "@/services/Blog";
 import { TBlog } from "@/types";
 
 export default async function BlogSection() {
-  const { data: blogs }: { data: TBlog[] } = await getAllBlogs();
-  const sortedBlogs = blogs.sort(
+  const response = await getAllBlogs().catch(() => null);
+  const blogs: TBlog[] = response?.data || [];
+  const sortedBlogs = blogs.slice().sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
   return (

@@ -1,216 +1,304 @@
 "use client";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import logo from "@/assets/Logo.png";
-import usaFlag from "@/assets/united-states.png";
-import loveIcon from "@/assets/love.png";
-import { Button } from "../ui/button";
-import {
-  Book,
-  Building2,
-  HelpCircle,
-  Home,
-  LayoutDashboard,
-  LogInIcon,
-  LogOutIcon,
-  Mail,
-  Phone,
-  ShoppingBag,
-  UserCircle2,
-  UserPlus,
-} from "lucide-react";
-import Container from "./Container";
-import NavigationLink from "./NavigationLink";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
 import Link from "next/link";
-import { Separator } from "../ui/separator";
-import { Fragment, useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useAppDispatch } from "@/redux/hooks";
 import { logout } from "@/redux/features/authSlice";
 import { logoutFromCookie } from "@/services/Auth";
-import { useRouter } from "next/navigation";
-import newArrivalImage from "@/assets/new-arrivals.jpg";
-import { toast } from "sonner";
 import { getAllProducts } from "@/services/Product";
-import { TBlog, TProduct } from "@/types";
 import { getAllBlogs } from "@/services/Blog";
+import { TBlog, TProduct } from "@/types";
+import { cn } from "@/lib/utils";
 
-// In your MegaMenu component
-export const MegaMenu = () => {
-  const [product, setProduct] = useState<TProduct[] | null>([]);
-  const [blogs, setBlogs] = useState<TBlog[] | null>([]);
+// Assets
+import logo from "@/assets/Logo.png";
+import usaFlag from "@/assets/united-states.png";
+import property from "@/assets/property.png";
+import home from "@/assets/home.png";
+import vehicles from "@/assets/car.png";
+import electronics from "@/assets/electronics.png";
+import mobile from "@/assets/mobile.png";
+import pets from "@/assets/pets.png";
+import sports from "@/assets/sports.png";
+import clothes from "@/assets/clothes.png";
 
-  const sortedProducts = product?.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
-  const sortedBlogs = blogs?.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
+// UI Components
+import Container from "./Container";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Badge } from "../ui/badge";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
+
+// Lucide Icons
+import {
+  ArrowRight,
+  BookOpen,
+  Building2,
+  ChevronDown,
+  Heart,
+  HelpCircle,
+  Home as HomeIcon,
+  LayoutDashboard,
+  LogInIcon,
+  LogOutIcon,
+  Mail,
+  Menu,
+  Phone,
+  PlusCircle,
+  Search,
+  ShieldCheck,
+  ShoppingBag,
+  Sparkles,
+  Tag,
+  User,
+  UserPlus,
+  X,
+} from "lucide-react";
+
+// Categories metadata
+export const CATEGORIES = [
+  { name: "property", label: "Property", image: property },
+  { name: "home", label: "Home & Living", image: home },
+  { name: "vehicles", label: "Vehicles", image: vehicles },
+  { name: "electronics", label: "Electronics", image: electronics },
+  { name: "mobile", label: "Mobiles", image: mobile },
+  { name: "pets", label: "Pets & Animals", image: pets },
+  { name: "sports", label: "Sports & Hobbies", image: sports },
+  { name: "clothes", label: "Fashion & Cloths", image: clothes },
+];
+
+// MegaMenu Component
+export const MegaMenu = ({ onClose }: { onClose?: () => void }) => {
+  const [products, setProducts] = useState<TProduct[]>([]);
+  const [blogs, setBlogs] = useState<TBlog[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
     async function fetchData() {
       try {
-        const { data } = await getAllProducts();
-        const { data: blogData } = await getAllBlogs();
+        const [prodRes, blogRes] = await Promise.allSettled([
+          getAllProducts(),
+          getAllBlogs(),
+        ]);
 
-        setProduct(data);
-        setBlogs(blogData);
-      } catch (err: any) {
-        toast.error(`Something went wrong! ${err.message || ""}`);
+        if (isMounted) {
+          if (prodRes.status === "fulfilled" && prodRes.value?.data) {
+            setProducts(prodRes.value.data);
+          }
+          if (blogRes.status === "fulfilled" && blogRes.value?.data) {
+            setBlogs(blogRes.value.data);
+          }
+        }
+      } catch (err) {
+        console.error("MegaMenu data fetch error:", err);
+      } finally {
+        if (isMounted) setIsLoading(false);
       }
     }
 
     fetchData();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
+  const sortedProducts = [...products]
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
+    .slice(0, 3);
+
+  const featuredBlog =
+    blogs.length > 0
+      ? [...blogs].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )[0]
+      : null;
+
   return (
-    <div className="absolute left-0 mt-2 max-w-screen bg-white shadow-2xl rounded-md p-4 grid gap-4 z-100 invisible group-hover:visible">
-      {/* category and new arrivals */}
-      <div className="flex gap-20">
-        {/* category */}
-        <div>
-          <h3 className="font-bold">Category</h3>
-          <div className="mt-4">
-            <ul className="space-y-2">
-              <li>
-                <NavigationLink route="Property" path="/category/property" />
-              </li>
-              <li>
-                <NavigationLink route="Home" path="/category/home" />
-              </li>
-              <li>
-                <NavigationLink route="Vehicles" path="/category/vehicles" />
-              </li>
-              <NavigationLink
-                route="Electronics"
-                path="/category/electronics"
-              />
-              <li></li>
-              <li>
-                <NavigationLink route="Mobile" path="/category/mobile" />
-              </li>
-              <li>
-                <NavigationLink route="Pets" path="/category/pets" />
-              </li>
-              <li>
-                <NavigationLink route="Sports" path="/category/sports" />
-              </li>
-              <li>
-                <NavigationLink route="Clothes" path="/category/clothes" />
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* new arrivals */}
-        <div>
-          <h3 className="font-bold">New Arrivals</h3>
-
-          <div className="mt-4">
-            <ul className="space-y-2">
-              {sortedProducts?.slice(0, 3).map((product) => (
-                <li key={product._id}>
-                  <Link href={`/products/${product._id}`}>
-                    <div className="h-[100px] w-[400px] rounded-lg p-4  flex gap-4 bg-[#FAF6F2]">
-                      {/* Image Container with Fixed Size */}
-
-                      <Image
-                        src={product.images[0]}
-                        alt="product image"
-                        width={80}
-                        height={40}
-                        className="rounded-lg object-cover"
-                      />
-
-                      {/* Product Info */}
-                      <div>
-                        <p className="text-sm hover:underline">
-                          {product.title}
-                        </p>
-                        <p className="text-base text-[#F59E0B]">
-                          BDT {product.price}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* actionable images */}
-        <div className=" flex gap-4">
-          <div className="flex flex-col gap-4">
-            <Link href="/products">
-              <div className="w-50 h-50 relative overflow-hidden rounded-lg flex-1">
-                <Image
-                  src={newArrivalImage}
-                  alt="Thumbnail Image"
-                  fill
-                  className="object-cover"
-                />
-              </div>
+    <div className="w-[860px] max-w-[92vw] bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 overflow-hidden">
+      <div className="grid grid-cols-12 gap-6">
+        {/* Left Column: Categories Grid */}
+        <div className="col-span-5 pr-4 border-r border-slate-100">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+              Browse Categories
+            </span>
+            <Link
+              href="/products"
+              onClick={onClose}
+              className="text-xs font-semibold text-amber-600 hover:text-amber-700 flex items-center gap-1 transition-colors"
+            >
+              All Items <ArrowRight className="w-3 h-3" />
             </Link>
-            <div className="w-50 h-50 relative flex-1">
-              <Image
-                src="https://images.unsplash.com/photo-1618424181497-157f25b6ddd5?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bGFwdG9wJTIwY29tcHV0ZXJ8ZW58MHx8MHx8fDA%3D"
-                alt="New Arrival Image"
-                layout="fill"
-                objectFit="cover"
-                className="rounded-lg"
-              />
-            </div>
           </div>
-          <div className="w-50 h-auto relative">
-            <Image
-              src="https://images.unsplash.com/photo-1523206489230-c012c64b2b48?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="New Arrival Image"
-              layout="fill"
-              objectFit="cover"
-              className="rounded-lg"
-            />
+          <div className="grid grid-cols-2 gap-2">
+            {CATEGORIES.map((cat) => (
+              <Link
+                key={cat.name}
+                href={`/category/${cat.name}`}
+                onClick={onClose}
+                className="group/cat flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50/70 border border-transparent hover:border-amber-200/50 transition-all duration-150"
+              >
+                <div className="w-7 h-7 relative shrink-0">
+                  <Image
+                    src={cat.image}
+                    alt={cat.label}
+                    fill
+                    className="object-contain transition-transform group-hover/cat:scale-110"
+                  />
+                </div>
+                <span className="text-xs font-medium text-slate-700 group-hover/cat:text-amber-800 truncate">
+                  {cat.label}
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
-      </div>
 
-      {/* blogs */}
-      <div>
-        <h3 className="font-bold">New Blogs</h3>
+        {/* Middle Column: New Arrivals */}
+        <div className="col-span-4 pr-4 border-r border-slate-100">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+              New Arrivals
+            </span>
+            <Link
+              href="/products"
+              onClick={onClose}
+              className="text-xs text-amber-600 hover:underline"
+            >
+              Explore
+            </Link>
+          </div>
 
-        <div className="mt-4">
-          <ul className="space-y-2">
-            {sortedBlogs?.slice(0, 3).map((blog) => (
-              <li key={blog._id}>
-                <Link href={`/blogs/${blog._id}`}>
-                  <div className=" overflow-hidden  rounded-lg w-[400px] flex gap-4 ">
-                    <div className="w-50 h-20 relative">
+          <div className="space-y-2.5">
+            {isLoading ? (
+              [1, 2, 3].map((n) => (
+                <div
+                  key={n}
+                  className="h-16 rounded-xl bg-slate-100 animate-pulse"
+                />
+              ))
+            ) : sortedProducts.length > 0 ? (
+              sortedProducts.map((prod) => (
+                <Link
+                  key={prod._id}
+                  href={`/products/${prod._id}`}
+                  onClick={onClose}
+                  className="group/prod flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 transition-all"
+                >
+                  <div className="w-12 h-12 relative rounded-lg overflow-hidden bg-slate-100 shrink-0 border border-slate-200/60">
+                    {prod.images?.[0] ? (
                       <Image
-                        src={blog.thumbnail}
-                        alt="product image"
-                        layout="fill"
-                        objectFit="cover"
-                        className="rounded-lg "
+                        src={prod.images[0]}
+                        alt={prod.title}
+                        fill
+                        className="object-cover group-hover/prod:scale-105 transition-transform"
                       />
-                    </div>
-                    <div className="w-full">
-                      <p className="text-sm hover:underline">{blog.title}</p>
-                      <p className="text-sm text-[#F59E0B]">{blog.category}</p>
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs">
+                        Item
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-semibold text-slate-800 truncate group-hover/prod:text-amber-600">
+                      {prod.title}
+                    </p>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className="text-xs font-bold text-amber-600">
+                        ৳{prod.price?.toLocaleString()}
+                      </span>
+                      {prod.condition && (
+                        <span className="text-[10px] text-slate-400 capitalize">
+                          • {prod.condition}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </Link>
-              </li>
-            ))}
-          </ul>
+              ))
+            ) : (
+              <p className="text-xs text-slate-400 py-4 text-center">
+                No recent arrivals available
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Right Column: Sell CTA & Blog */}
+        <div className="col-span-3 flex flex-col justify-between">
+          <div className="bg-gradient-to-br from-amber-500 to-amber-600 text-slate-950 p-4 rounded-xl shadow-xs">
+            <div className="flex items-center gap-1.5 mb-1">
+            
+              <h4 className="font-bold text-xs">Got something to sell?</h4>
+            </div>
+            <p className="text-[11px] text-slate-950/80 mb-3 leading-snug">
+              Turn your unused items into cash with zero listing fees.
+            </p>
+            <Link
+              href="/user/dashboard/products/add-product"
+              onClick={onClose}
+              className="inline-flex items-center gap-1 bg-slate-950 hover:bg-slate-900 text-white text-[11px] font-semibold px-3 py-1.5 rounded-full transition-all"
+            >
+              <PlusCircle className="w-3.5 h-3.5 text-amber-400" />
+              Post an Ad
+            </Link>
+          </div>
+
+          {featuredBlog && (
+            <Link
+              href={`/blogs/${featuredBlog._id}`}
+              onClick={onClose}
+              className="group/blog block p-2 rounded-xl hover:bg-slate-50 transition-all border border-slate-100/80 mt-3"
+            >
+              <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wider block mb-0.5">
+                Buying & Selling Guide
+              </span>
+              <p className="text-xs font-semibold text-slate-800 line-clamp-2 group-hover/blog:text-amber-600 leading-snug">
+                {featuredBlog.title}
+              </p>
+            </Link>
+          )}
+        </div>
+      </div>
+
+      {/* Trust bar footer */}
+      <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+        <div className="flex items-center gap-1 text-slate-600">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+          <span>100% Verified Community Listings</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <span>Safe Transactions</span>
+          <span>•</span>
+          <span>Zero Platform Commission</span>
+          <span>•</span>
+          <Link href="/faq" onClick={onClose} className="hover:text-amber-600 underline">
+            FAQ
+          </Link>
         </div>
       </div>
     </div>
@@ -219,8 +307,18 @@ export const MegaMenu = () => {
 
 export default function Navbar() {
   const router = useRouter();
-  const user = useSelector((state: RootState) => state.auth?.user);
+  const pathname = usePathname();
   const dispatch = useAppDispatch();
+
+  const user = useSelector((state: RootState) => state.auth?.user);
+  const wishlistItems = useSelector(
+    (state: RootState) => state.wishlist?.items || []
+  );
+  const wishlistCount = wishlistItems.length;
+
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleLogout = async () => {
     dispatch(logout());
@@ -228,11 +326,19 @@ export default function Navbar() {
     router.push("/");
   };
 
-  const [isScrolled, setIsScrolled] = useState(false);
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      router.push("/products");
+    }
+    setMobileOpen(false);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 200) {
+      if (window.scrollY > 25) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -245,230 +351,616 @@ export default function Navbar() {
     };
   }, []);
 
+  const navLinks = [
+    { name: "Home", href: "/" },
+    { name: "Products", href: "/products" },
+    { name: "Discover", href: "#", isMega: true },
+    { name: "Blogs", href: "/blogs" },
+    { name: "About Us", href: "/aboutUs" },
+    { name: "Contact", href: "/contactUs" },
+  ];
+
   return (
-    <div
-      className={` ${
-        isScrolled
-          ? "lg:fixed lg:top-0 lg:left-0 lg:w-full lg:bg-[#FAF6F2] lg:z-50 lg:shadow-md"
-          : ""
-      }`}
-    >
-      <Container>
-        <nav className="mt-4">
-          <div
-            className={`flex lg:items-center gap-4 flex-col lg:flex-row lg:justify-between ${
-              isScrolled ? "hidden" : ""
-            }`}
-          >
-            {/* left side */}
-            {/* logo */}
-            <Link href="/" className="block">
-              <div>
-                <Image src={logo} width={80} height={80} alt="Logo" />
-              </div>
-            </Link>
-
-            {/* right side */}
-            <div className="space-y-4">
-              {/* contact info */}
-              <div className="flex flex-col md:flex-row lg:items-center gap-2 md:gap-4">
-                <p className="text-sm">
-                  <Phone size={18} className="inline text-[#F59E0B]" /> Contact:
-                  +880 131 577 3424
-                </p>
-                <p className="text-sm">
-                  <Mail size={18} className="inline text-[#F59E0B]" />{" "}
-                  support@resellbd.com
-                </p>
-                <div className="text-sm flex items-center gap-1">
-                  <Image src={usaFlag} width={25} height={25} alt="usa flag" />
-                  English
-                </div>
-              </div>
-
-              {/* signin button */}
-              <div className="  flex flex-col md:flex-row md:justify-end gap-2 md:gap-4">
-                <Link href="/login" className="block ">
-                  <Button className="bg-[#F59E0B] hover:bg-[#D97706] text-[#1F2937] cursor-pointer">
-                    <LogInIcon size={18} />
-                    SignIn With Your Account
-                  </Button>
-                </Link>
-                <Link href="/register" className="block ">
-                  <Button
-                    variant="outline"
-                    className="text-[#1F2937] cursor-pointer"
-                  >
-                    <UserPlus size={18} />
-                    Create A New Account
-                  </Button>
-                </Link>
+    <div className="w-full">
+      {/* Top Utility Bar (Desktop only) */}
+      <div className="hidden md:block bg-slate-900 text-slate-300 text-xs py-2 border-b border-slate-800">
+        <Container>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-6">
+              <a
+                href="tel:+8801315773424"
+                className="flex items-center gap-1.5 hover:text-amber-400 transition-colors"
+              >
+                <Phone className="w-3.5 h-3.5 text-amber-500" />
+                <span>+880 131 577 3424</span>
+              </a>
+              <a
+                href="mailto:support@resellbd.com"
+                className="flex items-center gap-1.5 hover:text-amber-400 transition-colors"
+              >
+                <Mail className="w-3.5 h-3.5 text-amber-500" />
+                <span>support@resellbd.com</span>
+              </a>
+              <div className="hidden lg:flex items-center gap-1.5 text-slate-400">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                <span>Bangladesh&apos;s Trusted Second-Hand Marketplace</span>
               </div>
             </div>
+
+            <div className="flex items-center gap-4 text-slate-400">
+              <Link href="/faq" className="hover:text-amber-400 transition-colors">
+                Help & FAQs
+              </Link>
+              <span className="text-slate-700">|</span>
+              <div className="flex items-center gap-1.5 text-slate-300">
+                <Image
+                  src={usaFlag}
+                  width={16}
+                  height={16}
+                  alt="English"
+                  className="rounded-xs"
+                />
+                <span>English</span>
+              </div>
+              <span className="text-slate-700">|</span>
+              <span className="font-semibold text-amber-400">BDT (৳)</span>
+            </div>
           </div>
+        </Container>
+      </div>
 
-          <div className="mt-4  flex justify-end lg:justify-between lg:mb-4">
-            {/* menubar */}
+      {/* Main Sticky Header */}
+      <header
+        className={cn(
+          "sticky top-0 z-40 w-full transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-slate-200/80",
+          isScrolled ? "shadow-md py-2.5" : "py-3.5"
+        )}
+      >
+        <Container>
+          <div className="flex items-center justify-between gap-4">
+            {/* Left: Brand Logo */}
+            <div className="flex items-center gap-6">
+              <Link href="/" className="flex items-center gap-2.5 group">
+                <div className="relative w-9 h-9 sm:w-10 sm:h-10 transition-transform duration-300 group-hover:scale-105 shrink-0">
+                  <Image
+                    src={logo}
+                    alt="ReSellBD Logo"
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 leading-none">
+                    ReSell<span className="text-amber-500">BD</span>
+                  </span>
+                  <span className="text-[10px] font-semibold text-slate-400 tracking-wider uppercase mt-0.5 hidden sm:block">
+                    Smart Deals
+                  </span>
+                </div>
+              </Link>
 
-            <ul className="hidden lg:flex gap-4 text-lg">
-              <li>
-                <NavigationLink route="Home" path="/" />
-              </li>
-              <li>
-                <NavigationLink route="Products" path="/products" />
-              </li>
-              <li className="group relative">
-                {/* MegaMenu will open when hovering over Products */}
-                <NavigationLink route="Discover" path="#" />
-                <MegaMenu />
-              </li>
-              <li>
-                <NavigationLink route="About Us" path="/aboutUs" />
-              </li>
-              <li>
-                <NavigationLink route="Contact Us" path="/contactUs" />
-              </li>
-              <li>
-                <NavigationLink route="FAQs" path="/faq" />
-              </li>
-              <li>
-                <NavigationLink route="Blogs" path="/blogs" />
-              </li>
-            </ul>
-            {/* wishlist and profile */}
-            <div className="flex items-center gap-4">
-              <Link href="/wishlist">
-                <Button variant="outline" className="cursor-pointer">
-                  <Image src={loveIcon} width={22} height={22} alt="wishlist" />
-                  Wishlist
+              {/* Desktop Nav Links */}
+              <nav className="hidden lg:flex items-center gap-1">
+                {navLinks.map((link) => {
+                  if (link.isMega) {
+                    const isDiscoverActive = pathname.startsWith("/category");
+                    return (
+                      <div key={link.name} className="relative group">
+                        <button
+                          type="button"
+                          className={cn(
+                            "flex items-center gap-1 px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-150 cursor-pointer outline-hidden",
+                            isDiscoverActive
+                              ? "text-amber-600 font-semibold bg-amber-50/80"
+                              : "text-slate-700 hover:text-amber-600 hover:bg-slate-100/70"
+                          )}
+                        >
+                          <span>{link.name}</span>
+                          <ChevronDown className="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" />
+                        </button>
+
+                        {/* Mega Menu Dropdown */}
+                        <div className="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
+                          <MegaMenu />
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  const isActive = pathname === link.href;
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className={cn(
+                        "px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-150",
+                        isActive
+                          ? "text-amber-600 font-semibold bg-amber-50/80 shadow-xs"
+                          : "text-slate-700 hover:text-amber-600 hover:bg-slate-100/70"
+                      )}
+                    >
+                      {link.name}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+
+            {/* Right: Search, Wishlist, Post Ad CTA & User Profile */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* Search Bar - Desktop */}
+              <form
+                onSubmit={handleSearch}
+                className="hidden xl:flex items-center relative"
+              >
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" />
+                <Input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-52 lg:w-64 h-9 pl-9 pr-8 text-xs bg-slate-100/80 hover:bg-slate-100 focus:bg-white rounded-full border border-slate-200/80 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all placeholder:text-slate-400 shadow-none"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-3 text-slate-400 hover:text-slate-600"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </form>
+
+              {/* Wishlist Button */}
+              <Link
+                href="/wishlist"
+                className="relative p-2 rounded-full text-slate-700 hover:text-amber-600 hover:bg-amber-50/80 transition-colors group"
+                title="View Wishlist"
+                aria-label="Wishlist"
+              >
+                <Heart className="w-5 h-5 transition-transform group-hover:scale-110" />
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 bg-amber-500 text-slate-950 font-bold text-[10px] min-w-4 h-4 px-1 rounded-full flex items-center justify-center border-2 border-white shadow-xs">
+                    {wishlistCount > 9 ? "9+" : wishlistCount}
+                  </span>
+                )}
+              </Link>
+
+              {/* Post Ad / Sell Item Button */}
+              <Link href={user ? "/user/dashboard/products/add-product" : "/login"}>
+                <Button
+                  size="sm"
+                  className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold text-xs md:text-sm px-3.5 md:px-4 py-2 rounded-full shadow-xs hover:shadow-md transition-all flex items-center gap-1.5 cursor-pointer border border-amber-400/50"
+                >
+                  <PlusCircle className="w-4 h-4" />
+                  <span className="hidden sm:inline">Post Ad</span>
+                  <span className="sm:hidden">Sell</span>
                 </Button>
               </Link>
 
-              {/* profile dropdown visible for large devices */}
-              {user && (
-                <div className="hidden lg:flex">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild className="cursor-pointer">
-                      <UserCircle2 size={28} />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56">
-                      <DropdownMenuGroup>
-                        <DropdownMenuItem>
-                          <Link
-                            href="/user/dashboard"
-                            className="flex items-center gap-2 text-base"
-                          >
-                            <LayoutDashboard className="w-6 h-6" />
-                            Dashboard
-                          </Link>
-                        </DropdownMenuItem>
-                        <Separator />
-                        <DropdownMenuItem onClick={handleLogout}>
-                          <span className="flex gap-2 items-center text-base cursor-pointer">
-                            <LogOutIcon className="w-6 h-6" />
-                            Logout
-                          </span>
-                        </DropdownMenuItem>
-                      </DropdownMenuGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+              {/* User Profile Dropdown or Auth Buttons */}
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center gap-2 p-1 pl-1.5 pr-2.5 rounded-full border border-slate-200 hover:border-amber-400 hover:bg-amber-50/40 transition-all outline-hidden cursor-pointer group">
+                      <Avatar className="w-7 h-7 sm:w-8 sm:h-8 border border-amber-400/60 shadow-2xs">
+                        <AvatarFallback className="bg-gradient-to-br from-amber-500 to-amber-600 text-slate-950 font-bold text-xs">
+                          {user.identifier
+                            ? user.identifier.slice(0, 2).toUpperCase()
+                            : "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="hidden xl:flex flex-col text-left">
+                        <span className="text-xs font-semibold text-slate-800 truncate max-w-[100px]">
+                          {user.identifier?.split("@")[0] || "Account"}
+                        </span>
+                        <span className="text-[10px] text-amber-600 capitalize font-medium leading-none">
+                          {user.role || "Member"}
+                        </span>
+                      </div>
+                      <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600 transition-transform duration-200" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    className="w-60 p-2 rounded-2xl shadow-xl border border-slate-100 bg-white z-50"
+                  >
+                    <div className="px-3 py-2.5 bg-slate-50/80 rounded-xl mb-1 border border-slate-100">
+                      <p className="text-[11px] text-slate-500 font-medium">
+                        Signed in as
+                      </p>
+                      <p className="text-xs font-semibold text-slate-900 truncate">
+                        {user.identifier}
+                      </p>
+                      <div className="mt-1">
+                        <Badge
+                          variant={user.role === "admin" ? "default" : "secondary"}
+                          className="text-[10px] py-0 px-2 h-4 uppercase font-semibold"
+                        >
+                          {user.role === "admin" ? "Admin" : "Verified Member"}
+                        </Badge>
+                      </div>
+                    </div>
+                    <DropdownMenuSeparator className="my-1" />
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href={
+                          user.role === "admin"
+                            ? "/admin/dashboard"
+                            : "/user/dashboard"
+                        }
+                        className="flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg hover:bg-amber-50 cursor-pointer"
+                      >
+                        <LayoutDashboard className="w-4 h-4 text-amber-500" />
+                        <span className="font-medium text-slate-700">
+                          Dashboard
+                        </span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/user/dashboard/user-profile"
+                        className="flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg hover:bg-amber-50 cursor-pointer"
+                      >
+                        <User className="w-4 h-4 text-slate-600" />
+                        <span className="font-medium text-slate-700">
+                          My Profile
+                        </span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/user/dashboard/orders/purchase-history"
+                        className="flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg hover:bg-amber-50 cursor-pointer"
+                      >
+                        <ShoppingBag className="w-4 h-4 text-slate-600" />
+                        <span className="font-medium text-slate-700">
+                          Purchase History
+                        </span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/user/dashboard/products"
+                        className="flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg hover:bg-amber-50 cursor-pointer"
+                      >
+                        <Tag className="w-4 h-4 text-slate-600" />
+                        <span className="font-medium text-slate-700">
+                          My Listings
+                        </span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/wishlist"
+                        className="flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg hover:bg-amber-50 cursor-pointer"
+                      >
+                        <Heart className="w-4 h-4 text-slate-600" />
+                        <span className="font-medium text-slate-700">
+                          Wishlist
+                        </span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="my-1" />
+                    <DropdownMenuItem
+                      onClick={handleLogout}
+                      className="flex items-center gap-2.5 px-3 py-2 text-sm text-red-600 rounded-lg hover:bg-red-50 hover:text-red-700 cursor-pointer"
+                    >
+                      <LogOutIcon className="w-4 h-4 text-red-500" />
+                      <span className="font-medium">Sign Out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <Link href="/login">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="font-medium text-slate-700 hover:text-amber-600 hover:bg-amber-50 rounded-full px-3 text-xs md:text-sm"
+                    >
+                      <LogInIcon className="w-4 h-4 mr-1 text-slate-500" />
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link href="/register" className="hidden sm:inline-block">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-slate-300 hover:border-amber-500 hover:text-amber-600 font-medium rounded-full px-3.5 text-xs md:text-sm"
+                    >
+                      <UserPlus className="w-4 h-4 mr-1" />
+                      Register
+                    </Button>
+                  </Link>
                 </div>
               )}
 
-              {/* full dropdown visible for small devices */}
-              <div className="lg:hidden">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild className="cursor-pointer">
-                    <UserCircle2 size={28} />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56">
-                    <DropdownMenuLabel>Explore</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem>
-                        <Link
-                          href="/"
-                          className="flex gap-2 text-base items-center"
+              {/* Mobile Drawer Hamburger Trigger */}
+              <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="lg:hidden rounded-full hover:bg-slate-100 text-slate-700 h-9 w-9"
+                    aria-label="Open navigation menu"
+                  >
+                    <Menu className="w-5 h-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent
+                  side="right"
+                  className="w-[310px] sm:w-[360px] p-0 flex flex-col bg-white"
+                >
+                  {/* Sheet Header */}
+                  <SheetHeader className="p-4 border-b border-slate-100 flex flex-row items-center justify-between text-left">
+                    <Link
+                      href="/"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center gap-2.5"
+                    >
+                      <Image
+                        src={logo}
+                        alt="ReSellBD Logo"
+                        width={32}
+                        height={32}
+                        className="object-contain"
+                      />
+                      <span className="font-bold text-lg tracking-tight text-slate-900">
+                        ReSell<span className="text-amber-500">BD</span>
+                      </span>
+                    </Link>
+                    <SheetTitle className="sr-only">
+                      Mobile Navigation Menu
+                    </SheetTitle>
+                    <SheetDescription className="sr-only">
+                      Explore products, categories and manage account
+                    </SheetDescription>
+                  </SheetHeader>
+
+                  {/* Scrollable Body */}
+                  <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+                    {/* Search Input in Mobile Drawer */}
+                    <form onSubmit={handleSearch} className="relative">
+                      <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Input
+                        type="text"
+                        placeholder="Search products..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-9 pr-8 h-9 text-xs rounded-xl bg-slate-50 border-slate-200"
+                      />
+                      {searchQuery && (
+                        <button
+                          type="button"
+                          onClick={() => setSearchQuery("")}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                         >
-                          <Home className="w-6 h-6  " />
-                          Home
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </form>
+
+                    {/* User Status Card */}
+                    {user ? (
+                      <div className="p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border border-amber-200/60 space-y-2.5">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="w-10 h-10 border border-amber-400">
+                            <AvatarFallback className="bg-amber-500 text-slate-950 font-bold text-sm">
+                              {user.identifier
+                                ? user.identifier.slice(0, 2).toUpperCase()
+                                : "U"}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold text-slate-900 truncate">
+                              {user.identifier}
+                            </p>
+                            <Badge
+                              variant={
+                                user.role === "admin" ? "default" : "secondary"
+                              }
+                              className="text-[10px] py-0 px-2 h-4 uppercase mt-0.5"
+                            >
+                              {user.role === "admin"
+                                ? "Admin"
+                                : "Verified Member"}
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 pt-1">
+                          <Link
+                            href={
+                              user.role === "admin"
+                                ? "/admin/dashboard"
+                                : "/user/dashboard"
+                            }
+                            onClick={() => setMobileOpen(false)}
+                            className="flex items-center justify-center gap-1.5 py-1.5 px-2 bg-white text-slate-800 rounded-lg text-xs font-semibold border border-amber-200 shadow-2xs hover:bg-amber-100/50"
+                          >
+                            <LayoutDashboard className="w-3.5 h-3.5 text-amber-600" />
+                            Dashboard
+                          </Link>
+                          <Link
+                            href="/user/dashboard/user-profile"
+                            onClick={() => setMobileOpen(false)}
+                            className="flex items-center justify-center gap-1.5 py-1.5 px-2 bg-white text-slate-800 rounded-lg text-xs font-semibold border border-amber-200 shadow-2xs hover:bg-amber-100/50"
+                          >
+                            <User className="w-3.5 h-3.5 text-amber-600" />
+                            Profile
+                          </Link>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-2">
+                        <Link href="/login" onClick={() => setMobileOpen(false)}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-full rounded-xl text-xs font-semibold border-slate-300"
+                          >
+                            <LogInIcon className="w-3.5 h-3.5 mr-1" />
+                            Sign In
+                          </Button>
                         </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
+                        <Link
+                          href="/register"
+                          onClick={() => setMobileOpen(false)}
+                        >
+                          <Button
+                            size="sm"
+                            className="w-full rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white"
+                          >
+                            <UserPlus className="w-3.5 h-3.5 mr-1" />
+                            Register
+                          </Button>
+                        </Link>
+                      </div>
+                    )}
+
+                    {/* Post Ad Button Mobile */}
+                    <Link
+                      href={
+                        user ? "/user/dashboard/products/add-product" : "/login"
+                      }
+                      onClick={() => setMobileOpen(false)}
+                      className="block"
+                    >
+                      <Button
+                        size="sm"
+                        className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold rounded-xl py-2.5 shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+                      >
+                        <PlusCircle className="w-4 h-4" />
+                        <span>Post an Ad (Sell Item)</span>
+                      </Button>
+                    </Link>
+
+                    {/* Navigation Links */}
+                    <div className="space-y-1">
+                      <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-2 mb-1">
+                        Navigation
+                      </p>
+                      {[
+                        { name: "Home", href: "/", icon: HomeIcon },
+                        {
+                          name: "All Products",
+                          href: "/products",
+                          icon: ShoppingBag,
+                        },
+                        {
+                          name: "Wishlist",
+                          href: "/wishlist",
+                          icon: Heart,
+                          badge: wishlistCount,
+                        },
+                        { name: "Blogs & News", href: "/blogs", icon: BookOpen },
+                        { name: "About Us", href: "/aboutUs", icon: Building2 },
+                        { name: "Contact Us", href: "/contactUs", icon: Mail },
+                        { name: "Help & FAQs", href: "/faq", icon: HelpCircle },
+                      ].map((item) => {
+                        const Icon = item.icon;
+                        const isActive = pathname === item.href;
+                        return (
+                          <Link
+                            key={item.name}
+                            href={item.href}
+                            onClick={() => setMobileOpen(false)}
+                            className={cn(
+                              "flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition-colors",
+                              isActive
+                                ? "bg-amber-50 text-amber-700 font-semibold"
+                                : "text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                            )}
+                          >
+                            <div className="flex items-center gap-3">
+                              <Icon
+                                className={cn(
+                                  "w-4 h-4",
+                                  isActive
+                                    ? "text-amber-600"
+                                    : "text-slate-500"
+                                )}
+                              />
+                              <span>{item.name}</span>
+                            </div>
+                            {item.badge !== undefined && item.badge > 0 && (
+                              <span className="bg-amber-500 text-slate-950 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                                {item.badge}
+                              </span>
+                            )}
+                          </Link>
+                        );
+                      })}
+                    </div>
+
+                    {/* Categories Grid on Mobile */}
+                    <div className="space-y-2 pt-2 border-t border-slate-100">
+                      <div className="flex items-center justify-between px-2">
+                        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                          Categories
+                        </p>
                         <Link
                           href="/products"
-                          className="flex gap-2 text-base items-center"
+                          onClick={() => setMobileOpen(false)}
+                          className="text-[11px] text-amber-600 font-semibold hover:underline"
                         >
-                          <ShoppingBag className="w-6 h-6" />{" "}
-                          {/* Browse Products */}
-                          Products
+                          All Items
                         </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Link
-                          href="/aboutUs"
-                          className="flex gap-2 text-base items-center"
-                        >
-                          <Building2 className="w-6 h-6" />
-                          About Us
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Link
-                          href="/contactUs"
-                          className="flex gap-2 text-base items-center"
-                        >
-                          <Mail className="w-6 h-6" />
-                          Contact Us
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Link
-                          href="/faq"
-                          className="flex gap-2 text-base items-center"
-                        >
-                          <HelpCircle className="w-6 h-6" />
-                          FAQs
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Link
-                          href="/blogs"
-                          className="flex gap-2 text-base items-center"
-                        >
-                          <Book className="w-6 h-6" />
-                          Blogs
-                        </Link>
-                      </DropdownMenuItem>
-                      {user && (
-                        <Fragment>
-                          <DropdownMenuItem>
-                            <Link
-                              href="/user/dashboard"
-                              className="flex gap-2 text-base items-center"
-                            >
-                              <LayoutDashboard className="w-6 h-6" />
-                              Dashboard
-                            </Link>
-                          </DropdownMenuItem>
-
-                          <Separator />
-                          <DropdownMenuItem onClick={handleLogout}>
-                            <span className="flex gap-2 text-base items-center cursor-pointer">
-                              <LogOutIcon className="w-6 h-6" />
-                              Logout
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        {CATEGORIES.map((cat) => (
+                          <Link
+                            key={cat.name}
+                            href={`/category/${cat.name}`}
+                            onClick={() => setMobileOpen(false)}
+                            className="flex items-center gap-2 p-2 rounded-xl bg-slate-50 hover:bg-amber-50 transition-colors border border-slate-100 hover:border-amber-200"
+                          >
+                            <div className="w-5 h-5 relative shrink-0">
+                              <Image
+                                src={cat.image}
+                                alt={cat.label}
+                                fill
+                                className="object-contain"
+                              />
+                            </div>
+                            <span className="text-xs font-medium text-slate-800 truncate">
+                              {cat.label}
                             </span>
-                          </DropdownMenuItem>
-                        </Fragment>
-                      )}
-                    </DropdownMenuGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Sheet Footer */}
+                  <div className="p-4 border-t border-slate-100 bg-slate-50/50 space-y-3">
+                    {user && (
+                      <Button
+                        onClick={() => {
+                          setMobileOpen(false);
+                          handleLogout();
+                        }}
+                        variant="outline"
+                        size="sm"
+                        className="w-full text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 rounded-xl text-xs font-semibold cursor-pointer"
+                      >
+                        <LogOutIcon className="w-3.5 h-3.5 mr-1.5" />
+                        Sign Out
+                      </Button>
+                    )}
+                    <div className="text-[11px] text-slate-500 space-y-1 text-center">
+                      <p>Support Hotline: +880 131 577 3424</p>
+                      <p>support@resellbd.com • Dhaka, Bangladesh</p>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
-        </nav>
-      </Container>
+        </Container>
+      </header>
     </div>
   );
 }
