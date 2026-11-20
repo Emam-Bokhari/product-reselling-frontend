@@ -43,7 +43,19 @@ export default function ProfileModal({
 }) {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    identifier: string;
+    profilePicture: string;
+    city: string;
+    address: string;
+    postalCode: string;
+    country: string;
+    gender?: "male" | "female";
+    bio: string;
+    facebook: string;
+    website: string;
+  }>({
     name: profile?.name || "",
     identifier: profile?.identifier || "",
     profilePicture: profile?.profilePicture || "",
@@ -51,7 +63,7 @@ export default function ProfileModal({
     address: profile?.address || "",
     postalCode: profile?.postalCode || "",
     country: profile?.country || "",
-    gender: profile?.gender || "",
+    gender: profile?.gender,
     bio: profile?.bio || "",
     facebook: profile?.facebook || "",
     website: profile?.website || "",
