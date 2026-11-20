@@ -128,12 +128,8 @@ export default function DashboardOverview({
         {metrics.map((item) => {
           const Icon = item.icon;
           return (
-            <Link
-              key={item.title}
-              href={item.href}
-              className="block group focus:outline-hidden"
-            >
-              <Card className="relative overflow-hidden border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-2xl shadow-xs hover:shadow-md hover:border-amber-300/80 dark:hover:border-amber-500/40 transition-all duration-200">
+            <div key={item.title}>
+              <Card className="relative overflow-hidden border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-2xl shadow-xs">
                 <CardContent className="p-5 sm:p-6 flex items-start justify-between gap-4">
                   <div className="space-y-1.5">
                     <p className="text-xs font-semibold text-slate-500 dark:text-zinc-400 tracking-wider uppercase">
@@ -144,13 +140,13 @@ export default function DashboardOverview({
                     </div>
                   </div>
                   <div
-                    className={`p-3 rounded-2xl ${item.iconBg} ${item.iconColor} shrink-0 transition-transform group-hover:scale-105 duration-200`}
+                    className={`p-3 rounded-2xl ${item.iconBg} ${item.iconColor} shrink-0`}
                   >
                     <Icon className="w-5 h-5 stroke-[2.2]" />
                   </div>
                 </CardContent>
               </Card>
-            </Link>
+            </div>
           );
         })}
       </div>
