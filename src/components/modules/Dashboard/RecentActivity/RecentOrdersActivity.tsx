@@ -15,7 +15,6 @@ import {
   PlusCircle,
   Receipt,
   ShoppingBag,
-  Sparkles,
   TrendingUp,
   UserCheck,
 } from "lucide-react";

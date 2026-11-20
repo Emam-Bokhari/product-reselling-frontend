@@ -22,16 +22,27 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { IUser } from "@/types";
 import { updateProfile } from "@/services/User";
-import { Edit3 } from "lucide-react";
+import {
+  Edit3,
+  Globe,
+  Home,
+  ImageIcon,
+  Loader2,
+  MapPin,
+  Save,
+  User,
+} from "lucide-react";
+import { FaFacebook } from "react-icons/fa6";
 
 export default function ProfileModal({
   profile,
   onSave,
 }: {
   profile: IUser;
-  onSave: (updateProfile: any) => void;
+  onSave: (updateProfile: Partial<IUser>) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: profile?.name || "",
     identifier: profile?.identifier || "",
@@ -46,23 +57,23 @@ export default function ProfileModal({
     website: profile?.website || "",
   });
 
-  const handleChange = (e: any) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleGenderChange = (value: "male" | "female") => {
-    setFormData({ ...formData, gender: value || "male" });
+    setFormData({ ...formData, gender: value });
   };
 
   const handleSubmit = async () => {
-    // url validation function
     const isValidURL = (url: string) => {
       if (!url) return true;
       const regex = /^(https?:\/\/)?([\w.-]+\.[a-z]{2,})(\/\S*)?$/i;
       return regex.test(url);
     };
 
-    // Validate all URLs: profilePicture, facebook, website
     if (
       !isValidURL(formData.profilePicture) ||
       !isValidURL(formData.facebook) ||
@@ -74,149 +85,238 @@ export default function ProfileModal({
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const data = await updateProfile(formData);
 
       if (data?.success) {
-        toast.success("Your Profile updated successfully");
+        toast.success("Profile updated successfully!");
+        onSave(formData);
+        setOpen(false);
       } else {
-        toast.error(data?.error[0]?.message);
+        toast.error(data?.error?.[0]?.message || "Failed to update profile");
       }
     } catch {
-      toast.error("Something went wring!");
+      toast.error("Network error while updating profile");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    onSave(formData);
-    setOpen(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-[#F59E0B] hover:bg-[#D97706] text-white cursor-pointer">
-          <Edit3 size={18} /> Update Profile
+        <Button className="h-10 px-5 rounded-xl bg-[#F59E0B] hover:bg-[#D97706] text-white font-bold shadow-md shadow-amber-500/20 cursor-pointer flex items-center gap-2 transition-all">
+          <Edit3 className="w-4 h-4" />
+          <span>Edit Profile</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[90vw] md:max-w-[700px]">
-        <DialogHeader>
-          <DialogTitle className="mb-4 text-lg md:text-xl">
-            Update Profile
+
+      <DialogContent className="max-w-[95vw] md:max-w-[650px] p-6 rounded-3xl border-slate-200 dark:border-zinc-800">
+        <DialogHeader className="pb-3 border-b border-slate-100 dark:border-zinc-800">
+          <DialogTitle className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+            <User className="w-5 h-5 text-[#F59E0B]" />
+            <span>Update Profile Information</span>
           </DialogTitle>
+          <p className="text-xs text-muted-foreground">
+            Manage your personal specifications, residential address, and social links.
+          </p>
         </DialogHeader>
 
-        {/* Scrollable Content */}
-        <div className="max-h-[80vh] overflow-y-auto">
-          {/* Responsive 2-Column Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Name</Label>
-              <Input
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-              />
+        {/* Scrollable Form Body */}
+        <div className="max-h-[70vh] overflow-y-auto space-y-4 pr-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Full Name */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-bold text-slate-700 dark:text-zinc-300">
+                Full Name
+              </Label>
+              <div className="relative">
+                <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Input
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Your full name"
+                  className="pl-9 h-10 rounded-xl bg-slate-50/60 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 text-xs focus:border-[#F59E0B] focus:ring-1 focus:ring-[#F59E0B]"
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label>Profile Picture URL</Label>
-              <Input
-                name="profilePicture"
-                value={formData.profilePicture}
-                onChange={handleChange}
-              />
+            {/* Profile Picture URL */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-bold text-slate-700 dark:text-zinc-300">
+                Avatar Image URL
+              </Label>
+              <div className="relative">
+                <ImageIcon className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Input
+                  name="profilePicture"
+                  value={formData.profilePicture}
+                  onChange={handleChange}
+                  placeholder="https://..."
+                  className="pl-9 h-10 rounded-xl bg-slate-50/60 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 text-xs focus:border-[#F59E0B] focus:ring-1 focus:ring-[#F59E0B]"
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label>City</Label>
-              <Input
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-              />
+            {/* City */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-bold text-slate-700 dark:text-zinc-300">
+                City / District
+              </Label>
+              <div className="relative">
+                <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Input
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  placeholder="e.g. Dhaka, Chittagong"
+                  className="pl-9 h-10 rounded-xl bg-slate-50/60 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 text-xs focus:border-[#F59E0B] focus:ring-1 focus:ring-[#F59E0B]"
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label>Address</Label>
-              <Input
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label>Postal Code</Label>
+            {/* Postal Code */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-bold text-slate-700 dark:text-zinc-300">
+                Postal Code
+              </Label>
               <Input
                 name="postalCode"
                 value={formData.postalCode}
                 onChange={handleChange}
+                placeholder="e.g. 1205"
+                className="h-10 rounded-xl bg-slate-50/60 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 text-xs focus:border-[#F59E0B] focus:ring-1 focus:ring-[#F59E0B]"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label>Country</Label>
-              <Input
-                name="country"
-                value={formData.country}
-                onChange={handleChange}
-              />
+            {/* Country */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-bold text-slate-700 dark:text-zinc-300">
+                Country
+              </Label>
+              <div className="relative">
+                <Globe className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Input
+                  name="country"
+                  value={formData.country}
+                  onChange={handleChange}
+                  placeholder="e.g. Bangladesh"
+                  className="pl-9 h-10 rounded-xl bg-slate-50/60 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 text-xs focus:border-[#F59E0B] focus:ring-1 focus:ring-[#F59E0B]"
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label>Gender</Label>
+            {/* Gender */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-bold text-slate-700 dark:text-zinc-300">
+                Gender
+              </Label>
               <Select
                 onValueChange={handleGenderChange}
                 value={formData.gender}
-                defaultValue="male"
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="h-10 rounded-xl bg-slate-50/60 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 text-xs">
                   <SelectValue placeholder="Select Gender" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-xl">
                   <SelectItem value="male">Male</SelectItem>
                   <SelectItem value="female">Female</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label>Facebook</Label>
-              <Input
-                name="facebook"
-                type="url"
-                value={formData.facebook}
-                onChange={handleChange}
-              />
+            {/* Facebook URL */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-bold text-slate-700 dark:text-zinc-300">
+                Facebook Profile URL
+              </Label>
+              <div className="relative">
+                <FaFacebook className="w-4 h-4 text-blue-600 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Input
+                  name="facebook"
+                  type="url"
+                  value={formData.facebook}
+                  onChange={handleChange}
+                  placeholder="https://facebook.com/username"
+                  className="pl-9 h-10 rounded-xl bg-slate-50/60 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 text-xs focus:border-[#F59E0B] focus:ring-1 focus:ring-[#F59E0B]"
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label>Website</Label>
-              <Input
-                name="website"
-                type="url"
-                value={formData.website}
-                onChange={handleChange}
-              />
+            {/* Website URL */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-bold text-slate-700 dark:text-zinc-300">
+                Personal Website / Portfolio
+              </Label>
+              <div className="relative">
+                <Globe className="w-4 h-4 text-emerald-600 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Input
+                  name="website"
+                  type="url"
+                  value={formData.website}
+                  onChange={handleChange}
+                  placeholder="https://yourwebsite.com"
+                  className="pl-9 h-10 rounded-xl bg-slate-50/60 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 text-xs focus:border-[#F59E0B] focus:ring-1 focus:ring-[#F59E0B]"
+                />
+              </div>
             </div>
 
-            {/* Bio Section - Full Width */}
-            <div className="space-y-2 md:col-span-2">
-              <Label>Bio</Label>
+            {/* Address - Full width */}
+            <div className="space-y-1.5 sm:col-span-2">
+              <Label className="text-xs font-bold text-slate-700 dark:text-zinc-300">
+                Residential Address
+              </Label>
+              <div className="relative">
+                <Home className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <Input
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  placeholder="House, Road, Area details"
+                  className="pl-9 h-10 rounded-xl bg-slate-50/60 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 text-xs focus:border-[#F59E0B] focus:ring-1 focus:ring-[#F59E0B]"
+                />
+              </div>
+            </div>
+
+            {/* Bio - Full width */}
+            <div className="space-y-1.5 sm:col-span-2">
+              <Label className="text-xs font-bold text-slate-700 dark:text-zinc-300">
+                Bio / Seller Introduction
+              </Label>
               <Textarea
                 name="bio"
+                rows={3}
                 value={formData.bio}
                 onChange={handleChange}
+                placeholder="Share a short bio or details about your trading presence on ReSellBD..."
+                className="rounded-xl bg-slate-50/60 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 text-xs p-3 focus:border-[#F59E0B] focus:ring-1 focus:ring-[#F59E0B] resize-y"
               />
             </div>
           </div>
 
-          {/* Submit Button */}
-          <Button
-            className="w-full mt-4 bg-[#F59E0B] hover:bg-[#D97706] text-white cursor-pointer"
-            onClick={handleSubmit}
-          >
-            Save Changes
-          </Button>
+          {/* Action Button */}
+          <div className="pt-2 flex justify-end">
+            <Button
+              type="button"
+              disabled={isSubmitting}
+              onClick={handleSubmit}
+              className="h-10 px-6 rounded-xl bg-[#F59E0B] hover:bg-[#D97706] text-white font-bold cursor-pointer transition-all flex items-center gap-2 shadow-sm"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4" />
+                  <span>Save Changes</span>
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
