@@ -62,7 +62,6 @@ export function AppSidebarNav({ isAdmin }: { isAdmin: boolean }) {
           title: "Post New Ad",
           url: "/user/dashboard/products/add-product",
           icon: PlusCircle,
-          badge: "Free",
         },
       ],
     },

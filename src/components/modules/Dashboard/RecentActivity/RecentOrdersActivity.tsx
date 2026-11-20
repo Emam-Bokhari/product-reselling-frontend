@@ -164,7 +164,7 @@ export default function RecentOrdersActivity({
                             <span>
                               {activeTab === "sales" ? "Buyer:" : "Seller:"}{" "}
                               <span className="font-semibold text-slate-700 dark:text-zinc-300">
-                                {otherParty?.name || "Verified Customer"}
+                                {otherParty?.name || otherParty?.identifier || "Customer"}
                               </span>
                             </span>
                             <span>•</span>
@@ -194,7 +194,7 @@ export default function RecentOrdersActivity({
                               : "bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300 border-slate-200"
                           }`}
                         >
-                          {order.status || "Completed"}
+                          {order.status || "Pending"}
                         </Badge>
                       </div>
                     </div>

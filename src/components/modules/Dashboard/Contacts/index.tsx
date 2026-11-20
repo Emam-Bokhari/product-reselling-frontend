@@ -84,12 +84,9 @@ const getServiceBadgeClass = (service?: string) => {
     return "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200/80 dark:border-amber-800/60";
   }
   if (s.includes("sell") || s.includes("post") || s.includes("order")) {
-    return "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border-blue-200/80 dark:border-blue-800/60";
+    return "bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-400/30";
   }
-  if (s.includes("feedback") || s.includes("partnership") || s.includes("business")) {
-    return "bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300 border-purple-200/80 dark:border-purple-800/60";
-  }
-  return "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800/60";
+  return "bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300 border-slate-200 dark:border-zinc-700";
 };
 
 export default function ManageContacts({
@@ -202,7 +199,7 @@ export default function ManageContacts({
       ),
       cell: ({ row }) => {
         const c = row.original;
-        const fullName = `${c.firstName || ""} ${c.lastName || ""}`.trim() || "Anonymous Sender";
+        const fullName = `${c.firstName || ""} ${c.lastName || ""}`.trim() || c.email || "Anonymous";
         const initial = (c.firstName || c.email || "C").charAt(0).toUpperCase();
 
         return (
@@ -268,12 +265,9 @@ export default function ManageContacts({
             {s}
           </Badge>
         ) : (
-          <Badge
-            variant="outline"
-            className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full border bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400"
-          >
-            General Support
-          </Badge>
+          <span className="text-[11px] text-slate-400 dark:text-zinc-500 italic">
+            Not specified
+          </span>
         );
       },
     },
@@ -347,7 +341,7 @@ export default function ManageContacts({
               size="icon"
               asChild
               title="Reply via email"
-              className="h-8 w-8 text-slate-600 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-lg transition-colors"
+              className="h-8 w-8 text-slate-600 dark:text-zinc-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30 rounded-lg transition-colors"
             >
               <a
                 href={`mailto:${c.email}?subject=Re:%20Inquiry%20regarding%20ReSellBD`}
@@ -495,14 +489,14 @@ export default function ManageContacts({
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Phone Contacts
               </span>
-              <p className="text-2xl font-extrabold text-blue-600 dark:text-blue-400">
+              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
                 {withPhoneCount.toLocaleString()}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
                 Includes phone number
               </p>
             </div>
-            <div className="p-3 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 ring-1 ring-blue-200 dark:ring-blue-800/60 shrink-0">
+            <div className="p-3 rounded-2xl bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 ring-1 ring-slate-200 dark:ring-zinc-700 shrink-0">
               <Phone className="w-5 h-5 stroke-[2.2]" />
             </div>
           </CardContent>
@@ -514,14 +508,14 @@ export default function ManageContacts({
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Topic Verticals
               </span>
-              <p className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">
+              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
                 {uniqueServices.length}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
                 Different support topics
               </p>
             </div>
-            <div className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 ring-1 ring-emerald-200 dark:ring-emerald-800/60 shrink-0">
+            <div className="p-3 rounded-2xl bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 ring-1 ring-slate-200 dark:ring-zinc-700 shrink-0">
               <Tag className="w-5 h-5 stroke-[2.2]" />
             </div>
           </CardContent>
@@ -533,14 +527,14 @@ export default function ManageContacts({
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Latest Inquiry
               </span>
-              <p className="text-sm sm:text-base font-extrabold text-purple-600 dark:text-purple-400 pt-1">
+              <p className="text-sm sm:text-base font-extrabold text-amber-600 dark:text-amber-400 pt-1">
                 {latestInquiryDate}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
                 Most recent submission
               </p>
             </div>
-            <div className="p-3 rounded-2xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 ring-1 ring-purple-200 dark:ring-purple-800/60 shrink-0">
+            <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 ring-1 ring-amber-200 dark:ring-amber-800/60 shrink-0">
               <Calendar className="w-5 h-5 stroke-[2.2]" />
             </div>
           </CardContent>
@@ -839,7 +833,7 @@ export default function ManageContacts({
                     >
                       {Array.isArray(selectedContactForView.services)
                         ? selectedContactForView.services.join(", ")
-                        : (selectedContactForView.services as unknown as string) || "General Inquiry"}
+                        : (selectedContactForView.services as unknown as string) || "Not specified"}
                     </Badge>
                   </div>
                 </div>

@@ -82,19 +82,13 @@ const getCategoryBadgeClass = (category?: string) => {
     return "bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300 border-slate-200 dark:border-zinc-700";
   }
   const normalized = category.toLowerCase().trim();
-  if (normalized.includes("tech") || normalized.includes("mobile") || normalized.includes("electronic")) {
-    return "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border-blue-200/80 dark:border-blue-800/60";
-  }
   if (normalized.includes("guide") || normalized.includes("tip") || normalized.includes("advice")) {
     return "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200/80 dark:border-amber-800/60";
   }
-  if (normalized.includes("lifestyle") || normalized.includes("fashion") || normalized.includes("cloth")) {
-    return "bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300 border-purple-200/80 dark:border-purple-800/60";
+  if (normalized.includes("tech") || normalized.includes("mobile") || normalized.includes("safety")) {
+    return "bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-400/30";
   }
-  if (normalized.includes("safety") || normalized.includes("security") || normalized.includes("resell")) {
-    return "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800/60";
-  }
-  return "bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200/80 dark:border-amber-800/60";
+  return "bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300 border-slate-200 dark:border-zinc-700";
 };
 
 export default function ManageBlogs({ blogs = [] }: { blogs: TBlog[] }) {
@@ -264,7 +258,7 @@ export default function ManageBlogs({ blogs = [] }: { blogs: TBlog[] }) {
       accessorKey: "authorName",
       header: "Author",
       cell: ({ row }) => {
-        const author = row.original.authorName || "Editorial Team";
+        const author = row.original.authorName || "—";
 
         return (
           <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-zinc-300">
@@ -323,7 +317,7 @@ export default function ManageBlogs({ blogs = [] }: { blogs: TBlog[] }) {
               size="icon"
               asChild
               title="Edit article"
-              className="h-8 w-8 text-slate-600 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-lg transition-colors"
+              className="h-8 w-8 text-slate-600 dark:text-zinc-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30 rounded-lg transition-colors"
             >
               <Link href={`/admin/dashboard/blogs/update-blog/${blog._id}`}>
                 <Edit className="w-4 h-4" />
@@ -478,14 +472,14 @@ export default function ManageBlogs({ blogs = [] }: { blogs: TBlog[] }) {
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Topic Categories
               </span>
-              <p className="text-2xl font-extrabold text-blue-600 dark:text-blue-400">
+              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
                 {uniqueCategories.length}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
                 Distinct topic verticals
               </p>
             </div>
-            <div className="p-3 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 ring-1 ring-blue-200 dark:ring-blue-800/60 shrink-0">
+            <div className="p-3 rounded-2xl bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 ring-1 ring-slate-200 dark:ring-zinc-700 shrink-0">
               <FolderOpen className="w-5 h-5 stroke-[2.2]" />
             </div>
           </CardContent>
@@ -497,14 +491,14 @@ export default function ManageBlogs({ blogs = [] }: { blogs: TBlog[] }) {
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Authors / Writers
               </span>
-              <p className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">
+              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
                 {uniqueAuthors.length}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
                 Content contributors
               </p>
             </div>
-            <div className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 ring-1 ring-emerald-200 dark:ring-emerald-800/60 shrink-0">
+            <div className="p-3 rounded-2xl bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 ring-1 ring-slate-200 dark:ring-zinc-700 shrink-0">
               <PenTool className="w-5 h-5 stroke-[2.2]" />
             </div>
           </CardContent>
@@ -516,14 +510,14 @@ export default function ManageBlogs({ blogs = [] }: { blogs: TBlog[] }) {
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Latest Post
               </span>
-              <p className="text-sm sm:text-base font-extrabold text-purple-600 dark:text-purple-400 pt-1">
+              <p className="text-sm sm:text-base font-extrabold text-amber-600 dark:text-amber-400 pt-1">
                 {latestBlogDate}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
                 Most recent publication
               </p>
             </div>
-            <div className="p-3 rounded-2xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 ring-1 ring-purple-200 dark:ring-purple-800/60 shrink-0">
+            <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 ring-1 ring-amber-200 dark:ring-amber-800/60 shrink-0">
               <Calendar className="w-5 h-5 stroke-[2.2]" />
             </div>
           </CardContent>
@@ -785,7 +779,7 @@ export default function ManageBlogs({ blogs = [] }: { blogs: TBlog[] }) {
             <DialogDescription className="text-xs text-muted-foreground flex items-center gap-2 mt-1">
               <span className="flex items-center gap-1 font-semibold text-slate-700 dark:text-zinc-300">
                 <PenTool className="w-3 h-3 text-amber-500" />
-                {selectedBlogForPreview?.authorName || "Editorial Team"}
+                {selectedBlogForPreview?.authorName || "—"}
               </span>
             </DialogDescription>
           </DialogHeader>

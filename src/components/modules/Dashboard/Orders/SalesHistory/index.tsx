@@ -208,12 +208,12 @@ export default function SalesHistory({
             <div className="flex items-center gap-1.5">
               <User className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
               <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-zinc-200 capitalize truncate">
-                {buyer?.name || "Customer"}
+                {buyer?.name || buyer?.identifier || "Customer"}
               </p>
             </div>
             <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
               <Mail className="w-3 h-3 text-slate-400 shrink-0" />
-              <span className="truncate">{buyer?.identifier || "No email"}</span>
+              <span className="truncate">{buyer?.identifier || "—"}</span>
             </div>
           </div>
         );
@@ -256,10 +256,10 @@ export default function SalesHistory({
               variant="outline"
               className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300 border-slate-200 dark:border-zinc-700"
             >
-              {order.paymentMethod === "online" ? "SSLCommerz Online" : "Online Secured"}
+              {order.paymentMethod === "online" ? "SSLCommerz Online" : "Online"}
             </Badge>
             <div className="text-[11px] font-mono text-slate-500 dark:text-zinc-400 truncate max-w-[150px]">
-              {order.transactionId || "TXN-AUTO"}
+              {order.transactionId || "—"}
             </div>
           </div>
         );

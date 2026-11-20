@@ -262,7 +262,7 @@ export default function ManageProducts({ products = [] }: { products: TProduct[]
                   </span>
                 )}
                 {product.brand && <span>•</span>}
-                <span className="capitalize">{product.location || "Bangladesh"}</span>
+                <span className="capitalize">{product.location || "—"}</span>
               </div>
             </div>
           </div>

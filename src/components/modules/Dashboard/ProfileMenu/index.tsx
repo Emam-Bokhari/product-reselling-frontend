@@ -40,9 +40,9 @@ export const ProfileMenu = ({ user: initialUser }: ProfileMenuProps) => {
   const reduxUser = useAppSelector(selectCurrentUser);
 
   const currentUser = initialUser || reduxUser;
-  const displayName = (currentUser as any)?.name || "My Account";
-  const displayIdentifier = currentUser?.identifier || "Verified Member";
-  const role = currentUser?.role === "admin" ? "Admin" : "Verified Seller";
+  const displayName = (currentUser as any)?.name || (currentUser as any)?.identifier || "Account";
+  const displayIdentifier = currentUser?.identifier || "";
+  const role = currentUser?.role === "admin" ? "Admin" : currentUser?.role ? currentUser.role.toUpperCase() : "User";
 
   const getInitials = (name?: string) => {
     if (!name) return "RB";
@@ -67,7 +67,7 @@ export const ProfileMenu = ({ user: initialUser }: ProfileMenuProps) => {
           <div className="relative">
             <Avatar className="h-8 w-8 sm:h-9 sm:w-9 ring-2 ring-amber-500/30">
               <AvatarImage
-                src={(currentUser as any)?.profilePicture || "https://res.cloudinary.com/dvpqm6zct/image/upload/v1742736505/user_ug5gxm.png"}
+                src={(currentUser as any)?.profilePicture || ""}
                 alt={displayName}
               />
               <AvatarFallback className="bg-amber-500 text-slate-950 font-bold text-xs">

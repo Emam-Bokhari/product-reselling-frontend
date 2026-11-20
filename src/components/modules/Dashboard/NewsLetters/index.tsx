@@ -187,7 +187,7 @@ export default function ManageNewsLetters({
 
         return (
           <div className="flex items-center gap-3 py-1">
-            <div className="w-9 h-9 rounded-full bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200/80 dark:border-purple-800/60 flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs">
+            <div className="w-9 h-9 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/60 flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs">
               {initial}
             </div>
 
@@ -199,7 +199,7 @@ export default function ManageNewsLetters({
                 <button
                   type="button"
                   onClick={() => handleCopyEmail(email)}
-                  className="hover:text-purple-600 dark:hover:text-purple-400 flex items-center gap-1 transition-colors"
+                  className="hover:text-amber-600 dark:hover:text-amber-400 flex items-center gap-1 transition-colors"
                 >
                   <Copy className="w-3 h-3" />
                   <span>Copy</span>
@@ -207,7 +207,7 @@ export default function ManageNewsLetters({
                 <span>•</span>
                 <a
                   href={`mailto:${email}`}
-                  className="hover:text-purple-600 dark:hover:text-purple-400 flex items-center gap-1 transition-colors"
+                  className="hover:text-amber-600 dark:hover:text-amber-400 flex items-center gap-1 transition-colors"
                 >
                   <Send className="w-3 h-3" />
                   <span>Mail</span>
@@ -228,13 +228,13 @@ export default function ManageNewsLetters({
 
         if (email.includes("@gmail.com")) {
           provider = "Google Mail";
-          badgeStyle = "bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-300 border-red-200/80 dark:border-red-800/60";
+          badgeStyle = "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200/80 dark:border-amber-800/60";
         } else if (email.includes("@outlook.com") || email.includes("@hotmail.com")) {
           provider = "Microsoft";
-          badgeStyle = "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border-blue-200/80 dark:border-blue-800/60";
+          badgeStyle = "bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300 border-slate-200";
         } else if (email.includes("@yahoo.com")) {
           provider = "Yahoo Mail";
-          badgeStyle = "bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300 border-purple-200/80 dark:border-purple-800/60";
+          badgeStyle = "bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300 border-slate-200";
         }
 
         return (
@@ -286,7 +286,7 @@ export default function ManageNewsLetters({
               size="sm"
               onClick={() => handleCopyEmail(email)}
               title="Copy email address"
-              className="h-8 px-2.5 rounded-lg text-xs text-slate-600 dark:text-zinc-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/30 gap-1.5 transition-colors"
+              className="h-8 px-2.5 rounded-lg text-xs text-slate-600 dark:text-zinc-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30 gap-1.5 transition-colors"
             >
               <Copy className="w-3.5 h-3.5" />
               <span>Copy</span>
@@ -351,7 +351,7 @@ export default function ManageNewsLetters({
             </h1>
             <Badge
               variant="secondary"
-              className="bg-purple-500/10 text-purple-700 dark:text-purple-400 border border-purple-500/20 text-xs px-2.5 py-0.5 rounded-full font-bold"
+              className="bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 text-xs px-2.5 py-0.5 rounded-full font-bold"
             >
               {totalCount} Subscribers
             </Badge>
@@ -385,7 +385,7 @@ export default function ManageNewsLetters({
           <Button
             type="button"
             onClick={handleExportCSV}
-            className="h-10 px-4 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white shadow-md hover:shadow-purple-500/25 transition-all flex items-center gap-1.5"
+            className="h-10 px-4 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-600 text-slate-950 shadow-md hover:shadow-amber-500/25 transition-all flex items-center gap-1.5 border border-amber-400/60"
           >
             <Download className="w-3.5 h-3.5 stroke-[2.5]" />
             <span>Export CSV</span>
@@ -408,7 +408,7 @@ export default function ManageNewsLetters({
                 Active marketing recipients
               </p>
             </div>
-            <div className="p-3 rounded-2xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 ring-1 ring-purple-200 dark:ring-purple-800/60 shrink-0">
+            <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 ring-1 ring-amber-200 dark:ring-amber-800/60 shrink-0">
               <Send className="w-5 h-5 stroke-[2.2]" />
             </div>
           </CardContent>
@@ -420,14 +420,14 @@ export default function ManageNewsLetters({
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Google Mail (Gmail)
               </span>
-              <p className="text-2xl font-extrabold text-red-600 dark:text-red-400">
+              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
                 {gmailCount.toLocaleString()}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
                 {totalCount > 0 ? `${Math.round((gmailCount / totalCount) * 100)}% of audience` : "0%"}
               </p>
             </div>
-            <div className="p-3 rounded-2xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 ring-1 ring-red-200 dark:ring-red-800/60 shrink-0">
+            <div className="p-3 rounded-2xl bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 ring-1 ring-slate-200 dark:ring-zinc-700 shrink-0">
               <MailCheck className="w-5 h-5 stroke-[2.2]" />
             </div>
           </CardContent>
@@ -439,14 +439,14 @@ export default function ManageNewsLetters({
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Microsoft / Outlook
               </span>
-              <p className="text-2xl font-extrabold text-blue-600 dark:text-blue-400">
+              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
                 {outlookCount.toLocaleString()}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
                 Outlook & Hotmail users
               </p>
             </div>
-            <div className="p-3 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 ring-1 ring-blue-200 dark:ring-blue-800/60 shrink-0">
+            <div className="p-3 rounded-2xl bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 ring-1 ring-slate-200 dark:ring-zinc-700 shrink-0">
               <Globe className="w-5 h-5 stroke-[2.2]" />
             </div>
           </CardContent>
@@ -483,7 +483,7 @@ export default function ManageNewsLetters({
                 placeholder="Search subscribers by email address..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-10 rounded-xl bg-slate-50/70 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 text-xs sm:text-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                className="pl-10 h-10 rounded-xl bg-slate-50/70 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 text-xs sm:text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
               />
               {searchQuery && (
                 <button

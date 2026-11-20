@@ -24,7 +24,7 @@ export async function AppSidebar({
 
   const user = meResponse?.data || currentUser;
   const isAdmin = user?.role === "admin";
-  const displayName = user?.name || "Seller";
+  const displayName = user?.name || user?.identifier || "User";
 
   const initials = displayName
     .split(" ")
@@ -73,7 +73,7 @@ export async function AppSidebar({
             <div className="relative">
               <Avatar className="h-8 w-8 ring-1 ring-amber-500/30">
                 <AvatarImage
-                  src={user?.profilePicture || "https://res.cloudinary.com/dvpqm6zct/image/upload/v1742736505/user_ug5gxm.png"}
+                  src={user?.profilePicture || ""}
                   alt={displayName}
                 />
                 <AvatarFallback className="bg-amber-500 text-slate-950 font-bold text-xs">

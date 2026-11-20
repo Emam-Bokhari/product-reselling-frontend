@@ -74,6 +74,36 @@ export default async function AdminDashboardPage() {
       : [];
   const newsletters = Array.isArray(rawNewsletters) ? rawNewsletters : [];
 
+  // Totals (prioritizing backend meta.total if paginated)
+  type PaginatedRes = {
+    data?: { meta?: { total?: number } };
+    meta?: { total?: number };
+  };
+  const totalUsers =
+    usersRes.status === "fulfilled"
+      ? ((usersRes.value as PaginatedRes)?.data?.meta?.total ??
+        (usersRes.value as PaginatedRes)?.meta?.total ??
+        users.length)
+      : 0;
+  const totalBlogs =
+    blogsRes.status === "fulfilled"
+      ? ((blogsRes.value as PaginatedRes)?.data?.meta?.total ??
+        (blogsRes.value as PaginatedRes)?.meta?.total ??
+        blogs.length)
+      : 0;
+  const totalContacts =
+    contactsRes.status === "fulfilled"
+      ? ((contactsRes.value as PaginatedRes)?.data?.meta?.total ??
+        (contactsRes.value as PaginatedRes)?.meta?.total ??
+        contacts.length)
+      : 0;
+  const totalNewsletters =
+    newslettersRes.status === "fulfilled"
+      ? ((newslettersRes.value as PaginatedRes)?.data?.meta?.total ??
+        (newslettersRes.value as PaginatedRes)?.meta?.total ??
+        newsletters.length)
+      : 0;
+
   // Metrics
   const totalProductsAdded =
     productsRes.status === "fulfilled" ? productsRes.value?.data ?? 0 : 0;
@@ -96,10 +126,10 @@ export default async function AdminDashboardPage() {
       {/* 1. Admin KPI & Hero Control Center */}
       <AdminOverview
         user={user}
-        totalUsers={users.length}
-        totalBlogs={blogs.length}
-        totalContacts={contacts.length}
-        totalNewsletters={newsletters.length}
+        totalUsers={totalUsers}
+        totalBlogs={totalBlogs}
+        totalContacts={totalContacts}
+        totalNewsletters={totalNewsletters}
         totalProductsAdded={totalProductsAdded}
         totalSales={totalSales}
         totalPurchases={totalPurchases}

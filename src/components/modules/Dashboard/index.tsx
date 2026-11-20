@@ -27,7 +27,7 @@ export default function DashboardOverview({
   totalSales = 0,
   user,
 }: DashboardOverviewProps) {
-  const userName = user?.name || "Seller";
+  const userName = user?.name || user?.identifier || "User";
   const formattedDate = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
     month: "short",

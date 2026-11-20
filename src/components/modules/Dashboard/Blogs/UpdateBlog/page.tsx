@@ -132,7 +132,7 @@ export default function UpdateBlogForm({ blog }: { blog: TBlog }) {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 dark:border-zinc-800 pb-5">
             <div className="space-y-1">
               <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold ring-1 ring-blue-500/20">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold ring-1 ring-amber-500/20">
                   <Edit3 className="w-5 h-5 stroke-[2.2]" />
                 </div>
                 <div>
@@ -492,15 +492,15 @@ export default function UpdateBlogForm({ blog }: { blog: TBlog }) {
                 </div>
                 <div className="space-y-2.5 text-xs text-muted-foreground leading-relaxed">
                   <div className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-emerald-500 mt-0.5 shrink-0" />
+                    <Check className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
                     <span>Clear, actionable titles get 3x higher click-throughs.</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-emerald-500 mt-0.5 shrink-0" />
+                    <Check className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
                     <span>Summarize the main insight in the opening 2 sentences.</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-emerald-500 mt-0.5 shrink-0" />
+                    <Check className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
                     <span>High quality 16:9 images look best across mobile and desktop.</span>
                   </div>
                 </div>

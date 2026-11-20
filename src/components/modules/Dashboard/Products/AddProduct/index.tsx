@@ -556,8 +556,7 @@ export default function AddProductForm() {
                         alt="Product Preview"
                         className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-300"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src =
-                            "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop";
+                          (e.target as HTMLImageElement).style.display = "none";
                         }}
                       />
                       <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-[11px] font-semibold text-white">
@@ -608,8 +607,7 @@ export default function AddProductForm() {
                               alt={`Thumbnail ${idx + 1}`}
                               className="w-full h-full object-cover"
                               onError={(e) => {
-                                (e.target as HTMLImageElement).src =
-                                  "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&auto=format&fit=crop";
+                                (e.target as HTMLImageElement).style.display = "none";
                               }}
                             />
                           ) : (

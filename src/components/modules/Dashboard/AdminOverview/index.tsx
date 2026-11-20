@@ -49,7 +49,7 @@ export default function AdminOverview({
   recentContacts = [],
   recentBlogs = [],
 }: AdminOverviewProps) {
-  const adminName = user?.name || "Administrator";
+  const adminName = user?.name || user?.identifier || "Administrator";
   const formattedDate = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
     month: "short",
@@ -63,8 +63,8 @@ export default function AdminOverview({
       value: totalUsers.toLocaleString(),
       subtitle: "Total accounts on platform",
       icon: Users,
-      iconColor: "text-blue-600 dark:text-blue-400",
-      iconBg: "bg-blue-50 dark:bg-blue-950/40 ring-1 ring-blue-200 dark:ring-blue-800/60",
+      iconColor: "text-amber-600 dark:text-amber-400",
+      iconBg: "bg-amber-50 dark:bg-amber-950/40 ring-1 ring-amber-200 dark:ring-amber-800/60",
       href: "/admin/dashboard/users",
     },
     {
@@ -72,8 +72,8 @@ export default function AdminOverview({
       value: totalBlogs.toLocaleString(),
       subtitle: "Published community articles",
       icon: BookOpen,
-      iconColor: "text-emerald-600 dark:text-emerald-400",
-      iconBg: "bg-emerald-50 dark:bg-emerald-950/40 ring-1 ring-emerald-200 dark:ring-emerald-800/60",
+      iconColor: "text-slate-700 dark:text-zinc-200",
+      iconBg: "bg-slate-100 dark:bg-zinc-800 ring-1 ring-slate-200 dark:ring-zinc-700",
       href: "/admin/dashboard/blogs",
     },
     {
@@ -90,8 +90,8 @@ export default function AdminOverview({
       value: totalNewsletters.toLocaleString(),
       subtitle: "Subscribers to marketing list",
       icon: Send,
-      iconColor: "text-purple-600 dark:text-purple-400",
-      iconBg: "bg-purple-50 dark:bg-purple-950/40 ring-1 ring-purple-200 dark:ring-purple-800/60",
+      iconColor: "text-slate-700 dark:text-zinc-200",
+      iconBg: "bg-slate-100 dark:bg-zinc-800 ring-1 ring-slate-200 dark:ring-zinc-700",
       href: "/admin/dashboard/newsLetters",
     },
     {
@@ -239,7 +239,7 @@ export default function AdminOverview({
                     </div>
                     <div className="min-w-0">
                       <p className="text-xs font-semibold text-slate-900 dark:text-white truncate">
-                        {u.name || "Unnamed User"}
+                        {u.name || u.identifier || "User"}
                       </p>
                       <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
                         {u.identifier}
@@ -317,7 +317,7 @@ export default function AdminOverview({
         <Card className="border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-2xl shadow-xs overflow-hidden">
           <CardHeader className="p-5 border-b border-slate-100 dark:border-zinc-800 flex flex-row items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="p-2 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-xl">
+              <div className="p-2 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 rounded-xl">
                 <BookOpen className="w-4 h-4" />
               </div>
               <CardTitle className="text-base font-bold text-slate-900 dark:text-white">
@@ -348,7 +348,7 @@ export default function AdminOverview({
                   </p>
                 </div>
                 <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-200/60 dark:border-zinc-700/60 text-[10px] text-slate-400">
-                  <span>By {blog.authorName || "Admin"}</span>
+                  <span>By {blog.authorName || "—"}</span>
                   <Link
                     href={`/admin/dashboard/blogs/update-blog/${blog._id}`}
                     className="text-amber-600 hover:underline font-medium"

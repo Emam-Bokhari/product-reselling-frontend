@@ -96,13 +96,13 @@ export default function UserProfile({ profileData }: { profileData: IUser }) {
               {/* Name & Quick Identifiers */}
               <div className="space-y-1.5 pt-1 sm:pt-0">
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                  {profile?.name || "Community Member"}
+                  {profile?.name || profile?.identifier || "User"}
                 </h1>
 
                 <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-500 dark:text-zinc-400 flex-wrap">
                   <span className="flex items-center gap-1.5 font-medium text-slate-700 dark:text-zinc-300">
                     <Mail className="w-3.5 h-3.5 text-[#F59E0B] shrink-0" />
-                    <span>{profile?.identifier || "No email linked"}</span>
+                    <span>{profile?.identifier || "—"}</span>
                   </span>
 
                   {profile?.city && (
@@ -285,7 +285,13 @@ export default function UserProfile({ profileData }: { profileData: IUser }) {
             <CardContent className="pt-4 space-y-3">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-muted-foreground">Account Status</span>
-                <span className="font-semibold text-emerald-600 capitalize">
+                <span
+                  className={`font-semibold capitalize ${
+                    profile?.status === "banned"
+                      ? "text-rose-600 dark:text-rose-400"
+                      : "text-emerald-600 dark:text-emerald-400"
+                  }`}
+                >
                   {profile?.status || "Active"}
                 </span>
               </div>
@@ -380,7 +386,7 @@ export default function UserProfile({ profileData }: { profileData: IUser }) {
                   <p className="text-sm font-bold text-slate-900 dark:text-white capitalize">
                     {profile?.role === "admin"
                       ? "System Administrator"
-                      : "Verified User"}
+                      : profile?.role || "User"}
                   </p>
                 </div>
               </div>
@@ -437,7 +443,11 @@ export default function UserProfile({ profileData }: { profileData: IUser }) {
                     Country
                   </span>
                   <p className="text-sm font-bold text-slate-900 dark:text-white">
-                    {profile?.country || "Bangladesh"}
+                    {profile?.country || (
+                      <span className="text-muted-foreground font-normal italic">
+                        Not set
+                      </span>
+                    )}
                   </p>
                 </div>
               </div>

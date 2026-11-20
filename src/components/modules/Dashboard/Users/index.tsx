@@ -235,7 +235,7 @@ export default function ManageUsers({ users = [] }: { users: IUser[] }) {
                 onClick={() => setSelectedUserForDetail(u)}
                 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-slate-100 hover:text-amber-600 dark:hover:text-amber-400 transition-colors truncate block text-left"
               >
-                {u.name || "Unnamed User"}
+                {u.name || u.identifier || "User"}
               </button>
               <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground truncate">
                 <Mail className="w-3 h-3 shrink-0 text-slate-400" />
@@ -256,7 +256,7 @@ export default function ManageUsers({ users = [] }: { users: IUser[] }) {
         return (
           <div className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-zinc-300">
             <MapPin className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-            <span className="capitalize">{locationText || "Bangladesh"}</span>
+            <span className="capitalize">{locationText || "Not specified"}</span>
           </div>
         );
       },
@@ -341,18 +341,16 @@ export default function ManageUsers({ users = [] }: { users: IUser[] }) {
                 {isActive ? (
                   <Badge
                     variant="outline"
-                    className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200/80 dark:border-emerald-800/60 font-bold text-[11px] px-2.5 py-0.5 gap-1.5 cursor-pointer"
+                    className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200/80 dark:border-emerald-800/60 font-bold text-[11px] px-2.5 py-0.5 gap-1 cursor-pointer"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     Active
                     <ChevronDown className="w-2.5 h-2.5 opacity-60" />
                   </Badge>
                 ) : (
                   <Badge
                     variant="outline"
-                    className="bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 border-rose-200/80 dark:border-rose-800/60 font-bold text-[11px] px-2.5 py-0.5 gap-1.5 cursor-pointer"
+                    className="bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 border-rose-200/80 dark:border-rose-800/60 font-bold text-[11px] px-2.5 py-0.5 gap-1 cursor-pointer"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
                     Banned
                     <ChevronDown className="w-2.5 h-2.5 opacity-60" />
                   </Badge>
@@ -556,7 +554,7 @@ export default function ManageUsers({ users = [] }: { users: IUser[] }) {
                 All platform registered accounts
               </p>
             </div>
-            <div className="p-3 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 ring-1 ring-blue-200 dark:ring-blue-800/60 shrink-0">
+            <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 ring-1 ring-amber-200 dark:ring-amber-800/60 shrink-0">
               <Users className="w-5 h-5 stroke-[2.2]" />
             </div>
           </CardContent>
@@ -568,14 +566,14 @@ export default function ManageUsers({ users = [] }: { users: IUser[] }) {
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Active Accounts
               </span>
-              <p className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">
+              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
                 {activeCount.toLocaleString()}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
                 In good standing
               </p>
             </div>
-            <div className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 ring-1 ring-emerald-200 dark:ring-emerald-800/60 shrink-0">
+            <div className="p-3 rounded-2xl bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 ring-1 ring-slate-200 dark:ring-zinc-700 shrink-0">
               <UserCheck className="w-5 h-5 stroke-[2.2]" />
             </div>
           </CardContent>
@@ -876,7 +874,7 @@ export default function ManageUsers({ users = [] }: { users: IUser[] }) {
               </div>
               <div>
                 <DialogTitle className="text-lg font-bold text-slate-900 dark:text-white">
-                  {selectedUserForDetail?.name || "Unnamed User"}
+                  {selectedUserForDetail?.name || selectedUserForDetail?.identifier || "User"}
                 </DialogTitle>
                 <DialogDescription className="text-xs text-muted-foreground flex items-center gap-2 mt-0.5">
                   <span>{selectedUserForDetail?.identifier}</span>
@@ -917,8 +915,8 @@ export default function ManageUsers({ users = [] }: { users: IUser[] }) {
                         <ShieldCheck className="w-3.5 h-3.5" /> Administrator
                       </span>
                     ) : (
-                      <span className="text-slate-700 dark:text-zinc-300 flex items-center gap-1">
-                        <User className="w-3.5 h-3.5" /> Standard Member
+                      <span className="text-slate-700 dark:text-zinc-300 flex items-center gap-1 capitalize">
+                        <User className="w-3.5 h-3.5" /> {selectedUserForDetail.role || "User"}
                       </span>
                     )}
                   </div>
@@ -930,7 +928,7 @@ export default function ManageUsers({ users = [] }: { users: IUser[] }) {
                   <div>
                     <span className="text-slate-400 block text-[10px] uppercase font-semibold">City / Location</span>
                     <span className="font-semibold text-slate-800 dark:text-zinc-200">
-                      {selectedUserForDetail.city || "Not provided"}, {selectedUserForDetail.country || "Bangladesh"}
+                      {[selectedUserForDetail.city, selectedUserForDetail.country].filter(Boolean).join(", ") || "Not provided"}
                     </span>
                   </div>
                   <div>

@@ -480,19 +480,19 @@ export default function AddBlogForm() {
                 </div>
                 <div className="space-y-2.5 text-xs text-muted-foreground leading-relaxed">
                   <div className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-emerald-500 mt-0.5 shrink-0" />
+                    <Check className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
                     <span>Clear, actionable titles get 3x higher click-throughs.</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-emerald-500 mt-0.5 shrink-0" />
+                    <Check className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
                     <span>Summarize the main insight in the opening 2 sentences.</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-emerald-500 mt-0.5 shrink-0" />
+                    <Check className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
                     <span>High quality 16:9 images look best across mobile and desktop.</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-emerald-500 mt-0.5 shrink-0" />
+                    <Check className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
                     <span>Categorize accurately for community search indexing.</span>
                   </div>
                 </div>
