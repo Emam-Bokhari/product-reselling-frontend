@@ -68,20 +68,23 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
   // Sync with URL query parameters (?search=..., ?category=..., ?location=...)
   useEffect(() => {
     const searchParam = searchParams.get("search");
-    if (searchParam !== null) {
-      setSearchTerm(searchParam);
-    } else {
-      setSearchTerm("");
-    }
+    setSearchTerm(searchParam !== null ? searchParam : "");
 
     const categoryParam = searchParams.get("category");
-    if (categoryParam) {
-      setSelectedCategories([categoryParam]);
+    if (categoryParam && categoryParam !== "all") {
+      let normalized = categoryParam.toLowerCase().trim();
+      if (normalized === "mobile") normalized = "mobiles";
+      if (normalized === "cloths" || normalized === "fashion") normalized = "clothes";
+      setSelectedCategories([normalized]);
+    } else {
+      setSelectedCategories([]);
     }
 
     const locationParam = searchParams.get("location");
-    if (locationParam) {
-      setSelectedDistricts([locationParam.toLowerCase()]);
+    if (locationParam && locationParam !== "all") {
+      setSelectedDistricts([locationParam.toLowerCase().trim()]);
+    } else {
+      setSelectedDistricts([]);
     }
 
     setVisibleCount(ITEMS_PER_BATCH);
@@ -188,7 +191,10 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
         if (selectedDistricts.length === 0) return true;
         if (!product.location) return false;
         const prodLoc = product.location.toLowerCase().trim();
-        return selectedDistricts.some((sd) => sd.toLowerCase().trim() === prodLoc);
+        return selectedDistricts.some((sd) => {
+          const sdNorm = sd.toLowerCase().trim();
+          return prodLoc === sdNorm || prodLoc.includes(sdNorm) || sdNorm.includes(prodLoc);
+        });
       })
       .filter((product) => {
         // Price Filter
@@ -288,6 +294,17 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
     };
   }, [loadMore, totalItems, hasMore]);
 
+  const updateQueryParam = (key: string, value: string | null) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value && value.trim()) {
+      params.set(key, value.trim());
+    } else {
+      params.delete(key);
+    }
+    const qs = params.toString();
+    router.replace(qs ? `/products?${qs}` : "/products");
+  };
+
   const handleClearAll = () => {
     setSearchTerm("");
     setSelectedCategories([]);
@@ -303,12 +320,32 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchTerm.trim()) {
-      router.replace(
-        `/products?search=${encodeURIComponent(searchTerm.trim())}`
-      );
-    } else {
-      router.replace("/products");
+    updateQueryParam("search", searchTerm.trim() || null);
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    updateQueryParam("search", null);
+  };
+
+  const handleRemoveCategory = (cat: string) => {
+    setSelectedCategories((prev) => prev.filter((c) => c !== cat));
+    const urlCat = searchParams.get("category");
+    if (
+      urlCat &&
+      (urlCat.toLowerCase() === cat.toLowerCase() ||
+        (urlCat.toLowerCase() === "mobile" && cat === "mobiles") ||
+        (urlCat.toLowerCase() === "cloths" && cat === "clothes"))
+    ) {
+      updateQueryParam("category", null);
+    }
+  };
+
+  const handleRemoveDistrict = (dist: string) => {
+    setSelectedDistricts((prev) => prev.filter((d) => d !== dist));
+    const urlLoc = searchParams.get("location");
+    if (urlLoc && urlLoc.toLowerCase() === dist.toLowerCase()) {
+      updateQueryParam("location", null);
     }
   };
 
@@ -414,10 +451,7 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
                   {searchTerm && (
                     <button
                       type="button"
-                      onClick={() => {
-                        setSearchTerm("");
-                        router.replace("/products");
-                      }}
+                      onClick={handleClearSearch}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                       aria-label="Clear search"
                     >
@@ -517,10 +551,7 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
                         <span>Search: &ldquo;{searchTerm}&rdquo;</span>
                         <button
                           type="button"
-                          onClick={() => {
-                            setSearchTerm("");
-                            router.replace("/products");
-                          }}
+                          onClick={handleClearSearch}
                           className="hover:text-amber-950 cursor-pointer"
                         >
                           <X className="w-3 h-3" />
@@ -537,11 +568,7 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
                         <span>{cat}</span>
                         <button
                           type="button"
-                          onClick={() =>
-                            setSelectedCategories((prev) =>
-                              prev.filter((c) => c !== cat)
-                            )
-                          }
+                          onClick={() => handleRemoveCategory(cat)}
                           className="hover:text-slate-900 cursor-pointer"
                         >
                           <X className="w-3 h-3" />
@@ -579,11 +606,7 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
                         <span>{dist}</span>
                         <button
                           type="button"
-                          onClick={() =>
-                            setSelectedDistricts((prev) =>
-                              prev.filter((d) => d !== dist)
-                            )
-                          }
+                          onClick={() => handleRemoveDistrict(dist)}
                           className="hover:text-slate-900 cursor-pointer"
                         >
                           <X className="w-3 h-3" />

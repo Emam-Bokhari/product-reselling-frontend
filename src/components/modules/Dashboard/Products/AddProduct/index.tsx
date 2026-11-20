@@ -161,39 +161,6 @@ export default function AddProductForm() {
                 </div>
               </div>
             </div>
-
-            {/* Header Right Action Buttons - Matching ReSellBD Brand */}
-            <div className="flex items-center gap-2.5 self-start sm:self-auto">
-              <Button
-                type="button"
-                variant="outline"
-                asChild
-                className="h-10 px-4 rounded-xl text-xs font-semibold border-slate-200 dark:border-zinc-700 hover:bg-slate-100 dark:hover:bg-zinc-800"
-              >
-                <Link href="/user/dashboard/products" className="flex items-center gap-1.5">
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>Cancel / Back</span>
-                </Link>
-              </Button>
-
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="h-10 px-6 rounded-xl text-xs font-bold bg-[#F59E0B] hover:bg-[#D97706] text-white shadow-md shadow-amber-500/20 transition-all cursor-pointer flex items-center gap-1.5"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Publishing...</span>
-                  </>
-                ) : (
-                  <>
-                    <Check className="w-4 h-4 stroke-[3]" />
-                    <span>Add Product</span>
-                  </>
-                )}
-              </Button>
-            </div>
           </div>
 
           {/* Main 2-Column Responsive Grid */}

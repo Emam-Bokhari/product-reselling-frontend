@@ -359,11 +359,6 @@ export default function ManageProducts({ products = [] }: { products: TProduct[]
                     : "bg-slate-100 text-slate-600 dark:bg-zinc-800 dark:text-zinc-400 border-slate-200 dark:border-zinc-700 hover:bg-slate-200/60"
                 }`}
               >
-                <span
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    isAvailable ? "bg-amber-500 animate-pulse" : "bg-slate-400"
-                  }`}
-                />
                 <span className="capitalize">{product.status || "available"}</span>
                 <ChevronDown className="w-3 h-3 opacity-60 ml-0.5" />
               </button>
@@ -377,20 +372,14 @@ export default function ManageProducts({ products = [] }: { products: TProduct[]
                 onClick={() => handleUpdateProductStatus(product._id, "available")}
                 className="flex items-center justify-between text-xs cursor-pointer font-medium"
               >
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-amber-500" />
-                  <span>Available</span>
-                </div>
+                <span>Available</span>
                 {isAvailable && <CheckCircle2 className="w-3.5 h-3.5 text-amber-600" />}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => handleUpdateProductStatus(product._id, "sold")}
                 className="flex items-center justify-between text-xs cursor-pointer font-medium"
               >
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-slate-400" />
-                  <span>Sold</span>
-                </div>
+                <span>Sold</span>
                 {!isAvailable && <CheckCircle2 className="w-3.5 h-3.5 text-slate-600" />}
               </DropdownMenuItem>
             </DropdownMenuContent>

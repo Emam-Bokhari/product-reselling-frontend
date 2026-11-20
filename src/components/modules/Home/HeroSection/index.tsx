@@ -12,22 +12,32 @@ import consultantAvatar from "@/assets/consultant-avatar.jpg";
 
 // Icons
 import { Check, Phone, Search } from "lucide-react";
+import { districts } from "@/constants/districts";
 
 export default function HeroSection() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setCategory] = useState("all");
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState("all");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const params = new URLSearchParams();
+
     if (searchQuery.trim()) {
-      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
-    } else if (category !== "all") {
-      router.push(`/category/${category}`);
-    } else {
-      router.push("/products");
+      params.set("search", searchQuery.trim());
     }
+
+    if (category && category !== "all") {
+      params.set("category", category);
+    }
+
+    if (location && location !== "all") {
+      params.set("location", location);
+    }
+
+    const queryString = params.toString();
+    router.push(queryString ? `/products?${queryString}` : "/products");
   };
 
   return (
@@ -127,25 +137,30 @@ export default function HeroSection() {
                     className="w-full h-10 px-3 rounded-lg border border-slate-200 text-xs sm:text-sm text-slate-700 focus:outline-hidden focus:border-[#F59E0B] bg-slate-50/60 cursor-pointer transition-all"
                   >
                     <option value="all">All Categories</option>
-                    <option value="mobile">Mobiles</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="vehicles">Vehicles</option>
-                    <option value="clothes">Fashion &amp; Cloths</option>
+                    <option value="mobiles">Mobiles &amp; Tablets</option>
+                    <option value="electronics">Electronics &amp; Gadgets</option>
+                    <option value="vehicles">Vehicles &amp; Cars</option>
+                    <option value="property">Property &amp; Real Estate</option>
                     <option value="home">Home &amp; Living</option>
-                    <option value="sports">Sports &amp; Hobbies</option>
-                    <option value="property">Property</option>
+                    <option value="clothes">Fashion &amp; Clothing</option>
                     <option value="pets">Pets &amp; Animals</option>
+                    <option value="sports">Sports &amp; Hobbies</option>
                   </select>
                 </div>
 
                 <div>
-                  <input
-                    type="text"
+                  <select
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    placeholder="Your Location (e.g. Dhaka)"
-                    className="w-full h-10 px-3.5 rounded-lg border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-[#F59E0B] bg-slate-50/60 transition-all"
-                  />
+                    className="w-full h-10 px-3 rounded-lg border border-slate-200 text-xs sm:text-sm text-slate-700 focus:outline-hidden focus:border-[#F59E0B] bg-slate-50/60 cursor-pointer transition-all"
+                  >
+                    <option value="all">All Locations</option>
+                    {districts.map((dist) => (
+                      <option key={dist} value={dist}>
+                        {dist.replace(/\b\w/g, (char) => char.toUpperCase())}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <Button
