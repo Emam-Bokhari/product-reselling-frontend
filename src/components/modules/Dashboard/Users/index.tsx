@@ -204,7 +204,7 @@ export default function ManageUsers({ users = [] }: { users: IUser[] }) {
       header: ({ column }) => (
         <button
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center gap-1.5 font-bold hover:text-slate-950 dark:hover:text-white transition-colors"
+          className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white transition-colors"
         >
           <span>User Details</span>
           <ArrowUpDown className="w-3.5 h-3.5 text-muted-foreground" />
@@ -386,7 +386,7 @@ export default function ManageUsers({ users = [] }: { users: IUser[] }) {
       header: ({ column }) => (
         <button
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center gap-1.5 font-bold hover:text-slate-950 dark:hover:text-white transition-colors"
+          className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white transition-colors"
         >
           <span>Joined Date</span>
           <ArrowUpDown className="w-3.5 h-3.5 text-muted-foreground" />
@@ -547,7 +547,7 @@ export default function ManageUsers({ users = [] }: { users: IUser[] }) {
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Total Users
               </span>
-              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
+              <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                 {totalCount.toLocaleString()}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
@@ -566,7 +566,7 @@ export default function ManageUsers({ users = [] }: { users: IUser[] }) {
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Active Accounts
               </span>
-              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
+              <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                 {activeCount.toLocaleString()}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
@@ -585,7 +585,7 @@ export default function ManageUsers({ users = [] }: { users: IUser[] }) {
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Suspended / Banned
               </span>
-              <p className="text-2xl font-extrabold text-rose-600 dark:text-rose-400">
+              <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-rose-600 dark:text-rose-400">
                 {bannedCount.toLocaleString()}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
@@ -604,7 +604,7 @@ export default function ManageUsers({ users = [] }: { users: IUser[] }) {
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Administrators
               </span>
-              <p className="text-2xl font-extrabold text-amber-600 dark:text-amber-400">
+              <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-amber-600 dark:text-amber-400">
                 {adminCount.toLocaleString()}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
@@ -726,7 +726,7 @@ export default function ManageUsers({ users = [] }: { users: IUser[] }) {
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className="text-xs font-bold text-slate-700 dark:text-zinc-300 py-3.5"
+                      className="h-11 px-4 text-xs font-bold text-slate-700 dark:text-zinc-300 py-3.5 whitespace-nowrap"
                     >
                       {header.isPlaceholder
                         ? null

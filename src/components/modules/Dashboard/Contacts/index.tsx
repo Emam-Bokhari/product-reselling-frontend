@@ -191,7 +191,7 @@ export default function ManageContacts({
       header: ({ column }) => (
         <button
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center gap-1.5 font-bold hover:text-slate-950 dark:hover:text-white transition-colors"
+          className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white transition-colors"
         >
           <span>Sender Details</span>
           <ArrowUpDown className="w-3.5 h-3.5 text-muted-foreground" />
@@ -285,7 +285,7 @@ export default function ManageContacts({
             <p className="text-xs text-slate-600 dark:text-zinc-300 line-clamp-1 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
               {msg || "No message body"}
             </p>
-            <span className="text-[10px] text-amber-600 dark:text-amber-400 font-medium">
+            <span className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">
               Click to read full
             </span>
           </div>
@@ -297,7 +297,7 @@ export default function ManageContacts({
       header: ({ column }) => (
         <button
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center gap-1.5 font-bold hover:text-slate-950 dark:hover:text-white transition-colors"
+          className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white transition-colors"
         >
           <span>Date Received</span>
           <ArrowUpDown className="w-3.5 h-3.5 text-muted-foreground" />
@@ -470,7 +470,7 @@ export default function ManageContacts({
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Total Inquiries
               </span>
-              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
+              <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                 {totalCount.toLocaleString()}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
@@ -489,7 +489,7 @@ export default function ManageContacts({
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Phone Contacts
               </span>
-              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
+              <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                 {withPhoneCount.toLocaleString()}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
@@ -508,7 +508,7 @@ export default function ManageContacts({
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Topic Verticals
               </span>
-              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
+              <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                 {uniqueServices.length}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
@@ -527,7 +527,7 @@ export default function ManageContacts({
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Latest Inquiry
               </span>
-              <p className="text-sm sm:text-base font-extrabold text-amber-600 dark:text-amber-400 pt-1">
+              <p className="text-base sm:text-lg font-extrabold text-amber-600 dark:text-amber-400 pt-1">
                 {latestInquiryDate}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
@@ -640,7 +640,7 @@ export default function ManageContacts({
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className="text-xs font-bold text-slate-700 dark:text-zinc-300 py-3.5"
+                      className="h-11 px-4 text-xs font-bold text-slate-700 dark:text-zinc-300 py-3.5 whitespace-nowrap"
                     >
                       {header.isPlaceholder
                         ? null

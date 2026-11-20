@@ -192,7 +192,7 @@ export default function ManageBlogs({ blogs = [] }: { blogs: TBlog[] }) {
       header: ({ column }) => (
         <button
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center gap-1.5 font-bold hover:text-slate-950 dark:hover:text-white transition-colors"
+          className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white transition-colors"
         >
           <span>Article Details</span>
           <ArrowUpDown className="w-3.5 h-3.5 text-muted-foreground" />
@@ -273,7 +273,7 @@ export default function ManageBlogs({ blogs = [] }: { blogs: TBlog[] }) {
       header: ({ column }) => (
         <button
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center gap-1.5 font-bold hover:text-slate-950 dark:hover:text-white transition-colors"
+          className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white transition-colors"
         >
           <span>Published Date</span>
           <ArrowUpDown className="w-3.5 h-3.5 text-muted-foreground" />
@@ -453,7 +453,7 @@ export default function ManageBlogs({ blogs = [] }: { blogs: TBlog[] }) {
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Total Articles
               </span>
-              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
+              <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                 {totalCount.toLocaleString()}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
@@ -472,7 +472,7 @@ export default function ManageBlogs({ blogs = [] }: { blogs: TBlog[] }) {
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Topic Categories
               </span>
-              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
+              <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                 {uniqueCategories.length}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
@@ -491,7 +491,7 @@ export default function ManageBlogs({ blogs = [] }: { blogs: TBlog[] }) {
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Authors / Writers
               </span>
-              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
+              <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                 {uniqueAuthors.length}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
@@ -510,7 +510,7 @@ export default function ManageBlogs({ blogs = [] }: { blogs: TBlog[] }) {
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Latest Post
               </span>
-              <p className="text-sm sm:text-base font-extrabold text-amber-600 dark:text-amber-400 pt-1">
+              <p className="text-base sm:text-lg font-extrabold text-amber-600 dark:text-amber-400 pt-1">
                 {latestBlogDate}
               </p>
               <p className="text-[11px] text-slate-400 dark:text-zinc-500">
@@ -623,7 +623,7 @@ export default function ManageBlogs({ blogs = [] }: { blogs: TBlog[] }) {
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className="text-xs font-bold text-slate-700 dark:text-zinc-300 py-3.5"
+                      className="h-11 px-4 text-xs font-bold text-slate-700 dark:text-zinc-300 py-3.5 whitespace-nowrap"
                     >
                       {header.isPlaceholder
                         ? null

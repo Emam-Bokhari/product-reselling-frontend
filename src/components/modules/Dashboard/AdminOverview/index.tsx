@@ -238,7 +238,7 @@ export default function AdminOverview({
                       {(u.name || u.identifier || "U").charAt(0).toUpperCase()}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs font-semibold text-slate-900 dark:text-white truncate">
+                      <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
                         {u.name || u.identifier || "User"}
                       </p>
                       <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
@@ -249,13 +249,13 @@ export default function AdminOverview({
                   <div className="flex items-center gap-2 shrink-0">
                     <Badge
                       variant={u.role === "admin" ? "default" : "secondary"}
-                      className="text-[10px] px-2 py-0 capitalize"
+                      className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full capitalize"
                     >
                       {u.role || "user"}
                     </Badge>
                     <Badge
                       variant={u.status === "banned" ? "destructive" : "outline"}
-                      className="text-[10px] px-2 py-0 capitalize"
+                      className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full capitalize"
                     >
                       {u.status || "active"}
                     </Badge>
@@ -290,10 +290,10 @@ export default function AdminOverview({
               recentContacts.slice(0, 5).map((c) => (
                 <div key={c._id} className="py-3 flex flex-col gap-1">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-semibold text-slate-900 dark:text-white">
+                    <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
                       {c.firstName} {c.lastName}
                     </span>
-                    <span className="text-[10px] text-slate-400">
+                    <span className="text-[11px] text-slate-400">
                       {c.createdAt ? new Date(c.createdAt).toLocaleDateString() : ""}
                     </span>
                   </div>
@@ -337,21 +337,21 @@ export default function AdminOverview({
                 className="p-4 rounded-xl border border-slate-100 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/40 hover:border-amber-300 dark:hover:border-amber-500/50 transition-all flex flex-col justify-between"
               >
                 <div>
-                  <Badge variant="secondary" className="text-[10px] uppercase font-semibold mb-2">
+                  <Badge variant="secondary" className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full mb-2 capitalize">
                     {blog.category || "General"}
                   </Badge>
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-white line-clamp-2 mb-1">
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white line-clamp-2 mb-1">
                     {blog.title}
                   </h4>
-                  <p className="text-[11px] text-slate-500 dark:text-zinc-400 line-clamp-2">
+                  <p className="text-xs text-slate-500 dark:text-zinc-400 line-clamp-2">
                     {blog.introduction || blog.mainContent}
                   </p>
                 </div>
-                <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-200/60 dark:border-zinc-700/60 text-[10px] text-slate-400">
+                <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-200/60 dark:border-zinc-700/60 text-[11px] text-slate-400">
                   <span>By {blog.authorName || "—"}</span>
                   <Link
                     href={`/admin/dashboard/blogs/update-blog/${blog._id}`}
-                    className="text-amber-600 hover:underline font-medium"
+                    className="text-amber-600 hover:underline font-semibold"
                   >
                     Edit
                   </Link>

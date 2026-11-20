@@ -37,7 +37,6 @@ import {
   ImageIcon,
   Loader2,
   PenTool,
-  Sparkles,
   Tag,
   X,
 } from "lucide-react";
@@ -481,28 +480,6 @@ export default function UpdateBlogForm({ blog }: { blog: TBlog }) {
                       </p>
                     </div>
                   )}
-                </div>
-              </div>
-
-              {/* Editorial Best Practices Card */}
-              <div className="bg-white dark:bg-zinc-900 rounded-2xl p-6 shadow-xs border border-slate-200/80 dark:border-zinc-800 space-y-3.5">
-                <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold text-sm">
-                  <Sparkles className="w-4 h-4 text-amber-500" />
-                  Editorial Checklist
-                </div>
-                <div className="space-y-2.5 text-xs text-muted-foreground leading-relaxed">
-                  <div className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
-                    <span>Clear, actionable titles get 3x higher click-throughs.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
-                    <span>Summarize the main insight in the opening 2 sentences.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
-                    <span>High quality 16:9 images look best across mobile and desktop.</span>
-                  </div>
                 </div>
               </div>
             </div>

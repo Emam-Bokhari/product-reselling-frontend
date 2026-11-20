@@ -254,7 +254,7 @@ export default function SalesHistory({
           <div className="space-y-1 min-w-[140px]">
             <Badge
               variant="outline"
-              className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300 border-slate-200 dark:border-zinc-700"
+              className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300 border-slate-200 dark:border-zinc-700"
             >
               {order.paymentMethod === "online" ? "SSLCommerz Online" : "Online"}
             </Badge>
@@ -449,75 +449,75 @@ export default function SalesHistory({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Sales Orders */}
         <Card className="rounded-2xl border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xs">
-          <CardContent className="p-5 flex items-center justify-between">
+          <CardContent className="p-4 sm:p-5 flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Total Orders
               </span>
-              <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
+              <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                 {totalCount}
               </p>
             </div>
-            <div className="p-3 rounded-xl bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300">
-              <ShoppingBag className="w-5 h-5" />
+            <div className="p-3 rounded-2xl bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 ring-1 ring-slate-200 dark:ring-zinc-700 shrink-0">
+              <ShoppingBag className="w-5 h-5 stroke-[2.2]" />
             </div>
           </CardContent>
         </Card>
 
         {/* Gross Revenue */}
         <Card className="rounded-2xl border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xs">
-          <CardContent className="p-5 flex items-center justify-between">
+          <CardContent className="p-4 sm:p-5 flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Total Revenue
               </span>
-              <p className="text-2xl font-extrabold text-[#F59E0B]">
+              <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#F59E0B]">
                 ৳ {totalSalesRevenue.toLocaleString()}
               </p>
             </div>
-            <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 ring-1 ring-amber-200 dark:ring-amber-800/60">
-              <Wallet className="w-5 h-5" />
+            <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 ring-1 ring-amber-200 dark:ring-amber-800/60 shrink-0">
+              <Wallet className="w-5 h-5 stroke-[2.2]" />
             </div>
           </CardContent>
         </Card>
 
         {/* Completed Orders */}
         <Card className="rounded-2xl border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xs">
-          <CardContent className="p-5 flex items-center justify-between">
+          <CardContent className="p-4 sm:p-5 flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Completed
               </span>
-              <p className="text-2xl font-extrabold text-amber-700 dark:text-amber-400">
+              <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-amber-700 dark:text-amber-400">
                 {completedOrders.length}
               </p>
             </div>
-            <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 ring-1 ring-amber-200 dark:ring-amber-800/60">
-              <CheckCircle2 className="w-5 h-5" />
+            <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 ring-1 ring-amber-200 dark:ring-amber-800/60 shrink-0">
+              <CheckCircle2 className="w-5 h-5 stroke-[2.2]" />
             </div>
           </CardContent>
         </Card>
 
         {/* Pending Orders */}
         <Card className="rounded-2xl border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xs">
-          <CardContent className="p-5 flex items-center justify-between">
+          <CardContent className="p-4 sm:p-5 flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
                 Pending Orders
               </span>
-              <p className="text-2xl font-extrabold text-slate-700 dark:text-zinc-300">
+              <p className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-700 dark:text-zinc-300">
                 {pendingOrders.length}
               </p>
             </div>
-            <div className="p-3 rounded-xl bg-slate-100 dark:bg-zinc-800 text-slate-600 ring-1 ring-slate-200 dark:ring-zinc-700">
-              <Clock className="w-5 h-5" />
+            <div className="p-3 rounded-2xl bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 ring-1 ring-slate-200 dark:ring-zinc-700 shrink-0">
+              <Clock className="w-5 h-5 stroke-[2.2]" />
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* 3. Search & Multi-Filter Toolbar */}
-      <Card className="rounded-2xl border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xs p-4">
+      <Card className="rounded-2xl border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xs p-4 sm:p-5">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           {/* Search box */}
           <div className="relative flex-1 min-w-[240px] max-w-md">
@@ -526,12 +526,12 @@ export default function SalesHistory({
               placeholder="Search by product title..."
               value={(table.getColumn("product")?.getFilterValue() as string) ?? ""}
               onChange={(e) => handleGlobalSearch(e.target.value)}
-              className="pl-9 pr-8 h-9 text-xs rounded-xl bg-slate-50/60 dark:bg-zinc-800/60 border-slate-200 dark:border-zinc-700"
+              className="pl-10 pr-8 h-10 rounded-xl bg-slate-50/70 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 text-xs sm:text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
             />
             {Boolean(table.getColumn("product")?.getFilterValue()) && (
               <button
                 onClick={() => handleGlobalSearch("")}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -542,7 +542,7 @@ export default function SalesHistory({
           <div className="flex flex-wrap items-center gap-2">
             {/* Status Filter */}
             <Select value={selectedStatus} onValueChange={handleStatusFilterChange}>
-              <SelectTrigger className="w-[140px] h-9 text-xs rounded-xl bg-white dark:bg-zinc-800 border-slate-200 dark:border-zinc-700">
+              <SelectTrigger className="w-[140px] h-10 rounded-xl bg-slate-50/70 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 text-xs font-semibold">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
@@ -558,7 +558,7 @@ export default function SalesHistory({
                 variant="ghost"
                 size="sm"
                 onClick={handleResetFilters}
-                className="h-9 px-2.5 text-xs text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/40 rounded-xl"
+                className="h-10 px-3 rounded-xl text-xs text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/40"
               >
                 <X className="w-3.5 h-3.5 mr-1" />
                 Reset
@@ -571,7 +571,7 @@ export default function SalesHistory({
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-9 px-3 text-xs rounded-xl border-slate-200 dark:border-zinc-700 gap-1.5 ml-auto"
+                  className="h-10 px-3 rounded-xl border-slate-200 dark:border-zinc-700 bg-slate-50/70 dark:bg-zinc-800/50 text-xs font-semibold gap-1.5 ml-auto"
                 >
                   <SlidersHorizontal className="w-3.5 h-3.5" />
                   <span>Columns</span>
@@ -602,13 +602,13 @@ export default function SalesHistory({
       {/* 4. TanStack Table Container */}
       <Card className="rounded-2xl border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xs overflow-hidden">
         <Table>
-          <TableHeader className="bg-slate-50/70 dark:bg-zinc-800/50">
+          <TableHeader className="bg-slate-50/75 dark:bg-zinc-800/40 border-b border-slate-200/80 dark:border-zinc-800">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="border-b border-slate-200/80 dark:border-zinc-800 hover:bg-transparent">
+              <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className="h-11 px-4 text-xs font-bold text-slate-700 dark:text-zinc-300 uppercase tracking-wider"
+                    className="h-11 px-4 text-xs font-bold text-slate-700 dark:text-zinc-300 py-3.5 whitespace-nowrap"
                   >
                     {header.isPlaceholder
                       ? null
