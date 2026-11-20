@@ -24,7 +24,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 import { verifyToken } from "@/lib/verifyToken";
-import { setUser } from "@/redux/features/authSlice";
+import { setUser, TUser } from "@/redux/features/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import logo from "@/assets/Logo.png";
 import Image from "next/image";
@@ -52,29 +52,33 @@ export default function LoginForm() {
       const response = await loginUser(data);
 
       if (response?.success) {
-        toast.success(response?.message);
-        const user = verifyToken(response.data?.token);
+        const user = verifyToken(response.data?.token) as TUser;
+
+        const roleText =
+          user?.role?.toLowerCase() === "admin" ? "Admin" : "User";
+
+        toast.success(`${roleText} login successfully`);
 
         dispatch(setUser({ user: user, token: response.data?.token }));
         router.push("/");
       } else {
-        toast.error(response.error[0]?.message);
+        toast.error(response?.error?.[0]?.message || response?.message || "Login failed");
       }
     } catch {
-      toast.error("Something went wring!");
+      toast.error("Something went wrong!");
     }
   };
 
   // function to prefill the form for "User"
   const handleUserButtonClick = () => {
-    setValue("identifier", "user@gmail.com");
-    setValue("password", "user123");
+    setValue("identifier", "user@gmail.com", { shouldValidate: true });
+    setValue("password", "user123", { shouldValidate: true });
   };
 
   // function to prefill the form for "Admin"
   const handleAdminButtonClick = () => {
-    setValue("identifier", "admin@gmail.com");
-    setValue("password", "admin123");
+    setValue("identifier", "admin@gmail.com", { shouldValidate: true });
+    setValue("password", "admin123", { shouldValidate: true });
   };
 
   return (
@@ -96,6 +100,7 @@ export default function LoginForm() {
               <div className="flex flex-col gap-4 md:flex-row ">
                 <Button
                   type="submit"
+                  disabled={isSubmitting}
                   onClick={handleUserButtonClick}
                   className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white flex-1  "
                 >
@@ -103,6 +108,7 @@ export default function LoginForm() {
                 </Button>
                 <Button
                   type="submit"
+                  disabled={isSubmitting}
                   onClick={handleAdminButtonClick}
                   className="cursor-pointer bg-orange-600 hover:bg-orange-700 text-white flex-1 "
                 >

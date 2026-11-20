@@ -45,7 +45,7 @@ export function AppSidebarNav({ isAdmin }: { isAdmin: boolean }) {
       items: [
         {
           title: "Dashboard",
-          url: "/user/dashboard",
+          url: isAdmin ? "/admin/dashboard" : "/user/dashboard",
           icon: LayoutDashboard,
         },
       ],
@@ -144,8 +144,8 @@ export function AppSidebarNav({ isAdmin }: { isAdmin: boolean }) {
             {section.items.map((item) => {
               const IconComponent = item.icon;
               const isActive =
-                item.url === "/user/dashboard"
-                  ? pathname === "/user/dashboard"
+                item.url === "/user/dashboard" || item.url === "/admin/dashboard"
+                  ? pathname === item.url
                   : pathname === item.url ||
                     (item.url !== "/products" && pathname.startsWith(item.url));
 

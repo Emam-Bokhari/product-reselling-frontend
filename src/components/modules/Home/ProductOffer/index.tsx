@@ -16,26 +16,10 @@ export default function ProductOffer() {
     { label: "Home & Living", discount: "Save up to 30%", href: "/category/home" },
   ];
 
-  // Mathematical SVG wave path (ঢেউ ঢেউ / কেরি কাটা scallop curve)
-  const wavePath =
-    "M 0,0 L 1200,0 L 1200,3 Q 1188,14 1176,3 Q 1164,14 1152,3 Q 1140,14 1128,3 Q 1116,14 1104,3 Q 1092,14 1080,3 Q 1068,14 1056,3 Q 1044,14 1032,3 Q 1020,14 1008,3 Q 996,14 984,3 Q 972,14 960,3 Q 948,14 936,3 Q 924,14 912,3 Q 900,14 888,3 Q 876,14 864,3 Q 852,14 840,3 Q 828,14 816,3 Q 804,14 792,3 Q 780,14 768,3 Q 756,14 744,3 Q 732,14 720,3 Q 708,14 696,3 Q 684,14 672,3 Q 660,14 648,3 Q 636,14 624,3 Q 612,14 600,3 Q 588,14 576,3 Q 564,14 552,3 Q 540,14 528,3 Q 516,14 504,3 Q 492,14 480,3 Q 468,14 456,3 Q 444,14 432,3 Q 420,14 408,3 Q 396,14 384,3 Q 372,14 360,3 Q 348,14 336,3 Q 324,14 312,3 Q 300,14 288,3 Q 276,14 264,3 Q 252,14 240,3 Q 228,14 216,3 Q 204,14 192,3 Q 180,14 168,3 Q 156,14 144,3 Q 132,14 120,3 Q 108,14 96,3 Q 84,14 72,3 Q 60,14 48,3 Q 36,14 24,3 Q 12,14 0,3 Z";
-
   return (
     <section className="my-12 sm:my-16 lg:my-20">
       <Container>
-        {/* Top Scalloped Wavy Cut (উপরে কেরি/ঢেউ কাটা) */}
-        <div className="w-full h-3.5 sm:h-4 overflow-hidden leading-none select-none mb-8 sm:mb-10">
-          <svg
-            viewBox="0 0 1200 14"
-            className="w-full h-full text-[#F59E0B] fill-current"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <path d={wavePath} />
-          </svg>
-        </div>
-
-        {/* Content Section (Card Background Color & Card Box Removed) */}
+        {/* Content Section */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center py-2 sm:py-4">
           {/* Left Column: Headline, Bullets, Category Grid & Action Buttons */}
           <div className="lg:col-span-7 space-y-5 text-left">
@@ -137,18 +121,6 @@ export default function ProductOffer() {
               />
             </div>
           </div>
-        </div>
-
-        {/* Bottom Scalloped Wavy Cut (নিচে কেরি/ঢেউ কাটা - Inverted) */}
-        <div className="w-full h-3.5 sm:h-4 overflow-hidden leading-none select-none mt-8 sm:mt-10 rotate-180">
-          <svg
-            viewBox="0 0 1200 14"
-            className="w-full h-full text-[#F59E0B] fill-current"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <path d={wavePath} />
-          </svg>
         </div>
       </Container>
     </section>

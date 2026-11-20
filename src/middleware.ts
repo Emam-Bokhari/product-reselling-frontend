@@ -22,8 +22,7 @@ export const middleware = async (request: NextRequest) => {
             return NextResponse.next()
         } else {
             return NextResponse.redirect(
-                new URL(`https://re-sell-bd-client.vercel.app/login`, request.url)
-                // new URL(`http://localhost:3000/login`, request.url)
+                new URL("/login", request.url)
             )
         }
     }
@@ -42,20 +41,9 @@ export const middleware = async (request: NextRequest) => {
 
 export const config = {
     matcher: [
-        "/user/:page",
+        "/user/:path*",
         "/checkout",
         "/profile",
-        "/user/dashboard/products",
-        "/user/dashboard/products/add-product",
-        "/user/dashboard/products/update-product",
-        "/user/dashboard/orders/purchase-history",
-        "/user/dashboard/orders/sales-history",
-        "/admin/dashboard/blogs",
-        "/admin/dashboard/blogs/add-blog",
-        "/admin/dashboard/blogs/update-blog",
-        "/admin/dashboard/blogs/update-blog/:page",
-        "/admin/dashboard/users",
-        "/admin/dashboard/contacts",
-        "/admin/dashboard/newsLetters",
+        "/admin/:path*",
     ]
 }
