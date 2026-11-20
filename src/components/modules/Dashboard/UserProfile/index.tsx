@@ -14,13 +14,11 @@ import {
   Mail,
   MapPin,
   Shield,
-  ShieldCheck,
   User,
   UserCheck,
 } from "lucide-react";
 import { FaFacebook } from "react-icons/fa6";
 import { IUser } from "@/types";
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -72,23 +70,15 @@ export default function UserProfile({ profileData }: { profileData: IUser }) {
             className="object-cover opacity-50 mix-blend-screen scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-900/80 to-amber-950/70" />
-
-          {/* Top-right verified banner badge */}
-          <div className="absolute top-4 right-4 sm:top-5 sm:right-6 flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-white/90 backdrop-blur-md border border-white/15 shadow-xs">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#F59E0B]" />
-              <span>ReSellBD Verified Profile</span>
-            </span>
-          </div>
         </div>
 
         {/* Identity & Actions Bar */}
-        <div className="relative px-6 sm:px-8 pb-6">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 -mt-16 sm:-mt-20">
+        <div className="relative px-6 sm:px-8 pb-6 pt-3 sm:pt-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
             {/* Left: Avatar & Primary info */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4 sm:gap-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
               {/* Profile Avatar */}
-              <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-3xl ring-4 ring-white dark:ring-zinc-900 bg-white dark:bg-zinc-800 shadow-xl overflow-hidden shrink-0 flex items-center justify-center">
+              <div className="relative -mt-16 sm:-mt-20 w-28 h-28 sm:w-32 sm:h-32 rounded-3xl ring-4 ring-white dark:ring-zinc-900 bg-white dark:bg-zinc-800 shadow-xl overflow-hidden shrink-0 flex items-center justify-center z-10">
                 {profile?.profilePicture ? (
                   <Image
                     src={profile.profilePicture}
@@ -103,40 +93,11 @@ export default function UserProfile({ profileData }: { profileData: IUser }) {
                 )}
               </div>
 
-              {/* Name, Badges & Quick Identifiers */}
-              <div className="space-y-2 pt-1 sm:pt-0">
-                <div className="flex items-center gap-2.5 flex-wrap">
-                  <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                    {profile?.name || "Community Member"}
-                  </h1>
-
-                  <Badge
-                    variant="outline"
-                    className={
-                      profile?.status === "banned"
-                        ? "bg-rose-500/10 text-rose-600 border-rose-500/20 font-semibold"
-                        : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 font-semibold text-xs py-0.5"
-                    }
-                  >
-                    <span
-                      className={`w-1.5 h-1.5 rounded-full mr-1.5 inline-block ${
-                        profile?.status === "banned"
-                          ? "bg-rose-500"
-                          : "bg-emerald-500"
-                      }`}
-                    />
-                    {profile?.status ? profile.status.toUpperCase() : "ACTIVE"}
-                  </Badge>
-
-                  <Badge
-                    variant="outline"
-                    className="bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20 font-semibold uppercase text-[11px] py-0.5"
-                  >
-                    {profile?.role === "admin"
-                      ? "Administrator"
-                      : "Verified Member"}
-                  </Badge>
-                </div>
+              {/* Name & Quick Identifiers */}
+              <div className="space-y-1.5 pt-1 sm:pt-0">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                  {profile?.name || "Community Member"}
+                </h1>
 
                 <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-500 dark:text-zinc-400 flex-wrap">
                   <span className="flex items-center gap-1.5 font-medium text-slate-700 dark:text-zinc-300">
@@ -171,7 +132,7 @@ export default function UserProfile({ profileData }: { profileData: IUser }) {
             </div>
 
             {/* Right: Profile Modal Trigger */}
-            <div className="sm:self-end pt-2 sm:pt-0 shrink-0">
+            <div className="sm:self-center pt-2 sm:pt-0 shrink-0">
               <ProfileModal profile={profile} onSave={handleSave} />
             </div>
           </div>
@@ -342,17 +303,6 @@ export default function UserProfile({ profileData }: { profileData: IUser }) {
                     <span className="text-muted-foreground">Last Updated</span>
                     <span className="font-semibold text-slate-800 dark:text-zinc-200">
                       {lastUpdatedDate}
-                    </span>
-                  </div>
-                </>
-              )}
-              {profile?._id && (
-                <>
-                  <Separator />
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">Account ID</span>
-                    <span className="font-mono text-[11px] text-slate-500">
-                      #{profile._id.slice(-8).toUpperCase()}
                     </span>
                   </div>
                 </>
