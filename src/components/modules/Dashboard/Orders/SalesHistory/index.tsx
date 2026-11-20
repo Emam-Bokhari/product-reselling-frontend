@@ -311,14 +311,8 @@ export default function SalesHistory({
                     : "bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300 border-slate-200"
                 }`}
               >
-                {isCurrentUpdating ? (
+                {isCurrentUpdating && (
                   <Loader2 className="w-3 h-3 animate-spin mr-1" />
-                ) : (
-                  <span
-                    className={`w-1.5 h-1.5 rounded-full mr-1.5 ${
-                      isCompleted ? "bg-[#F59E0B]" : "bg-slate-400"
-                    }`}
-                  />
                 )}
                 <span className="capitalize">{order.status || "Pending"}</span>
                 <ChevronDown className="w-3 h-3 ml-1 opacity-60" />

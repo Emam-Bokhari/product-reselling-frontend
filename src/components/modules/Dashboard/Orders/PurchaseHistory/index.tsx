@@ -270,17 +270,12 @@ export default function PurchaseHistory({
 
         return (
           <span
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold rounded-full border ${
+            className={`inline-flex items-center px-2.5 py-1 text-xs font-bold rounded-full border ${
               isCompleted
                 ? "bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200/80"
                 : "bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300 border-slate-200"
             }`}
           >
-            <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                isCompleted ? "bg-[#F59E0B]" : "bg-slate-400"
-              }`}
-            />
             <span className="capitalize">{order.status || "Pending"}</span>
           </span>
         );

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getCurrentUser } from "@/services/Auth";
 import { getMe } from "@/services/User";
-import { Plus, Search, Store } from "lucide-react";
+import { Plus, Store } from "lucide-react";
 import Link from "next/link";
 import { Fragment } from "react";
 
@@ -38,22 +38,6 @@ export default async function DashboardLayout({
               <SidebarTrigger className="text-slate-600 hover:text-slate-900 dark:text-zinc-300 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-zinc-800" />
               <Separator orientation="vertical" className="h-4 hidden sm:block opacity-60" />
               <DynamicBreadcrumb />
-            </div>
-
-            {/* Middle search shortcut (Desktop) */}
-            <div className="hidden lg:flex items-center flex-1 max-w-sm mx-6">
-              <Link
-                href="/products"
-                className="w-full flex items-center justify-between px-3 py-1.5 rounded-full bg-slate-100/80 dark:bg-zinc-800/80 border border-slate-200/60 dark:border-zinc-700/60 text-xs text-muted-foreground hover:border-amber-500/50 transition-colors"
-              >
-                <div className="flex items-center gap-2">
-                  <Search className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Search products, categories, deals...</span>
-                </div>
-                <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono bg-white dark:bg-zinc-900 text-slate-500 border border-slate-200 dark:border-zinc-750">
-                  Ctrl K
-                </kbd>
-              </Link>
             </div>
 
             {/* Right section: Quick actions, notifications, profile */}
