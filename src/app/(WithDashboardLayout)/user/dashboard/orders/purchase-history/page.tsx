@@ -4,10 +4,11 @@ import PurchaseHistory from "@/components/modules/Dashboard/Orders/PurchaseHisto
 import { getPurchaseHistory } from "@/services/Order";
 
 export default async function PurchaseHistoryPage() {
-  const { data } = await getPurchaseHistory();
-  const purchaseHistory = data?.result ?? [];
+  const res = await getPurchaseHistory().catch(() => null);
+  const purchaseHistory =
+    res?.data?.result ?? (Array.isArray(res?.data) ? res.data : []);
   return (
-    <div className="p-4">
+    <div className="space-y-6">
       <PurchaseHistory purchaseHistory={purchaseHistory} />
     </div>
   );

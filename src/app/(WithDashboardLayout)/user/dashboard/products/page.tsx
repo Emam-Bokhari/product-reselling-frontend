@@ -4,10 +4,11 @@ import ManageProducts from "@/components/modules/Dashboard/Products";
 import { getProductsByUser } from "@/services/Product";
 
 export default async function ProductsManagementPage() {
-  const { data } = await getProductsByUser();
-  const products = data ?? [];
+  const res = await getProductsByUser().catch(() => ({ data: [] }));
+  const products = res?.data ?? [];
+
   return (
-    <div className="p-4">
+    <div className="space-y-6">
       <ManageProducts products={products} />
     </div>
   );
