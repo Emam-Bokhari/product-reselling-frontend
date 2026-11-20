@@ -175,13 +175,11 @@ export function AppSidebarNav({ isAdmin }: { isAdmin: boolean }) {
                         <span>{item.title}</span>
                       </div>
 
-                      {item.badge ? (
+                      {item.badge && (
                         <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-amber-500 text-slate-950 uppercase tracking-wider">
                           {item.badge}
                         </span>
-                      ) : isActive ? (
-                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                      ) : null}
+                      )}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

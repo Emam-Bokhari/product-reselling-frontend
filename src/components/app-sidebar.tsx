@@ -12,7 +12,7 @@ import { getCurrentUser } from "@/services/Auth";
 import { getMe } from "@/services/User";
 import { AppSidebarNav } from "./app-sidebar-nav";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ShieldCheck, Store } from "lucide-react";
+import { Store } from "lucide-react";
 
 export async function AppSidebar({
   ...props
@@ -25,7 +25,6 @@ export async function AppSidebar({
   const user = meResponse?.data || currentUser;
   const isAdmin = user?.role === "admin";
   const displayName = user?.name || "Seller";
-  const roleTitle = isAdmin ? "Administrator" : "Verified Seller";
 
   const initials = displayName
     .split(" ")
@@ -52,14 +51,9 @@ export async function AppSidebar({
             />
           </div>
           <div className="flex flex-col leading-tight">
-            <div className="flex items-center gap-1.5">
-              <span className="font-bold text-base tracking-tight text-slate-900 dark:text-white">
-                ReSell<span className="text-amber-500">BD</span>
-              </span>
-              <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-slate-900 text-amber-400 dark:bg-amber-400 dark:text-slate-950 uppercase tracking-wider">
-                HUB
-              </span>
-            </div>
+            <span className="font-bold text-base tracking-tight text-slate-900 dark:text-white">
+              ReSell<span className="text-amber-500">BD</span>
+            </span>
             <span className="text-[11px] text-muted-foreground font-medium">
               Second-Hand Marketplace
             </span>
@@ -90,15 +84,9 @@ export async function AppSidebar({
             </div>
 
             <div className="flex flex-col min-w-0">
-              <div className="flex items-center gap-1">
-                <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
-                  {displayName}
-                </p>
-                <ShieldCheck className="w-3 h-3 text-emerald-500 shrink-0" />
-              </div>
-              <span className="text-[10px] text-amber-600 dark:text-amber-400 font-medium">
-                {roleTitle}
-              </span>
+              <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
+                {displayName}
+              </p>
             </div>
           </div>
 
