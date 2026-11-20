@@ -1,13 +1,14 @@
 export const dynamic = "force-dynamic";
+
 import ManageUsers from "@/components/modules/Dashboard/Users";
 import { getAllUsers } from "@/services/User";
 
-export default async function ProductsManagementPage() {
-  const { data } = await getAllUsers();
-  const users = data.result ?? [];
+export default async function UsersManagementPage() {
+  const response = await getAllUsers().catch(() => ({ data: { result: [] } }));
+  const users = response?.data?.result ?? response?.data ?? [];
 
   return (
-    <div className="p-4">
+    <div className="space-y-6">
       <ManageUsers users={users} />
     </div>
   );

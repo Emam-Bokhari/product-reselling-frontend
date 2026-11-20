@@ -9,7 +9,6 @@ import {
   Wallet,
   Package,
   Calendar,
-  ShieldCheck,
   ArrowRight,
   FilePlus,
   UserCheck,
