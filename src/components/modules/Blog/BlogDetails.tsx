@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import moment from "moment-timezone";
 import { toast } from "sonner";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   Calendar,
   Clock,
@@ -67,15 +69,6 @@ export default function BlogDetails({ blog, relatedBlogs = [] }: BlogDetailsProp
     const wordCount = text.split(/\s+/).length;
     return Math.max(1, Math.ceil(wordCount / 180));
   }, [blog?.introduction, blog?.mainContent]);
-
-  // Split content into clean paragraphs
-  const paragraphs = useMemo(() => {
-    if (!blog?.mainContent) return [];
-    return blog.mainContent
-      .split(/\n+/)
-      .map((p) => p.trim())
-      .filter(Boolean);
-  }, [blog?.mainContent]);
 
   // Copy link handler
   const handleCopyLink = () => {
@@ -273,17 +266,104 @@ export default function BlogDetails({ blog, relatedBlogs = [] }: BlogDetailsProp
               </div>
             )}
 
-            {/* Main Content Paragraphs */}
-            <div className="space-y-6 text-[#374151] dark:text-slate-300 text-base sm:text-[17px] leading-relaxed sm:leading-8">
-              {paragraphs.length > 0 ? (
-                paragraphs.map((paragraph, index) => (
-                  <p key={index} className="leading-relaxed">
-                    {paragraph}
-                  </p>
-                ))
-              ) : (
-                <p className="leading-relaxed">{blog.mainContent}</p>
-              )}
+            {/* Main Content Markdown Render */}
+            <div className="text-[#374151] dark:text-slate-300 text-base sm:text-[17px] leading-relaxed sm:leading-8">
+              {blog.mainContent ? (
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    h1: ({ children }) => (
+                      <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1F2937] dark:text-white mt-8 mb-4 border-b border-slate-200/80 dark:border-slate-800 pb-3">
+                        {children}
+                      </h1>
+                    ),
+                    h2: ({ children }) => (
+                      <h2 className="text-xl sm:text-2xl font-bold text-[#1F2937] dark:text-white mt-8 mb-4 flex items-center gap-2">
+                        <span className="w-1.5 h-6 bg-[#F59E0B] rounded-full inline-block shrink-0" />
+                        <span>{children}</span>
+                      </h2>
+                    ),
+                    h3: ({ children }) => (
+                      <h3 className="text-lg sm:text-xl font-bold text-[#1F2937] dark:text-white mt-7 mb-3 flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-[#F59E0B] inline-block shrink-0" />
+                        <span>{children}</span>
+                      </h3>
+                    ),
+                    h4: ({ children }) => (
+                      <h4 className="text-base sm:text-lg font-bold text-[#1F2937] dark:text-white mt-5 mb-2">
+                        {children}
+                      </h4>
+                    ),
+                    p: ({ children }) => (
+                      <p className="mb-5 leading-relaxed sm:leading-8 text-slate-700 dark:text-slate-300">
+                        {children}
+                      </p>
+                    ),
+                    ul: ({ children }) => (
+                      <ul className="list-disc list-outside ml-6 space-y-2 mb-5 text-slate-700 dark:text-slate-300">
+                        {children}
+                      </ul>
+                    ),
+                    ol: ({ children }) => (
+                      <ol className="list-decimal list-outside ml-6 space-y-2.5 mb-5 text-slate-700 dark:text-slate-300 font-medium">
+                        {children}
+                      </ol>
+                    ),
+                    li: ({ children }) => (
+                      <li className="leading-relaxed pl-1 text-slate-700 dark:text-slate-300 font-normal">
+                        {children}
+                      </li>
+                    ),
+                    strong: ({ children }) => (
+                      <strong className="font-bold text-[#1F2937] dark:text-white">
+                        {children}
+                      </strong>
+                    ),
+                    blockquote: ({ children }) => (
+                      <blockquote className="border-l-4 border-[#F59E0B] pl-4 py-2 italic text-slate-700 dark:text-slate-300 bg-amber-50/50 dark:bg-amber-950/20 rounded-r-xl my-5">
+                        {children}
+                      </blockquote>
+                    ),
+                    code: ({ children }) => (
+                      <code className="bg-slate-100 dark:bg-slate-800 text-amber-600 dark:text-amber-400 px-1.5 py-0.5 rounded text-sm font-mono">
+                        {children}
+                      </code>
+                    ),
+                    a: ({ href, children }) => (
+                      <a
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-amber-600 hover:text-amber-700 dark:text-amber-400 font-semibold underline underline-offset-4 transition-colors"
+                      >
+                        {children}
+                      </a>
+                    ),
+                    table: ({ children }) => (
+                      <div className="overflow-x-auto my-6 border border-slate-200 dark:border-slate-800 rounded-xl">
+                        <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-sm">
+                          {children}
+                        </table>
+                      </div>
+                    ),
+                    th: ({ children }) => (
+                      <th className="bg-slate-100 dark:bg-slate-800 px-4 py-2.5 text-left text-xs font-bold uppercase text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800">
+                        {children}
+                      </th>
+                    ),
+                    td: ({ children }) => (
+                      <td className="px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800">
+                        {children}
+                      </td>
+                    ),
+                    hr: () => (
+                      <hr className="my-8 border-slate-200 dark:border-slate-800" />
+                    ),
+                  }}
+                >
+                  {blog.mainContent}
+                </ReactMarkdown>
+              ) : null}
             </div>
 
             {/* Tags Section */}

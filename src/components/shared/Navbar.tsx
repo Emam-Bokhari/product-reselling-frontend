@@ -487,12 +487,12 @@ export default function Navbar() {
           isScrolled ? "shadow-md py-2.5" : "py-3.5"
         )}
       >
-        <Container>
-          <div className="flex items-center justify-between gap-4">
+        <Container className="px-3 sm:px-4">
+          <div className="flex items-center justify-between gap-2 sm:gap-4">
             {/* Left: Brand Logo */}
-            <div className="flex items-center gap-6">
-              <Link href="/" className="flex items-center gap-2.5 group">
-                <div className="relative w-9 h-9 sm:w-10 sm:h-10 transition-transform duration-300 group-hover:scale-105 shrink-0">
+            <div className="flex items-center gap-6 shrink-0">
+              <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group shrink-0">
+                <div className="relative w-8 h-8 sm:w-10 sm:h-10 transition-transform duration-300 group-hover:scale-105 shrink-0">
                   <Image
                     src={logo}
                     alt="ReSellBD Logo"
@@ -502,7 +502,7 @@ export default function Navbar() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 leading-none">
+                  <span className="text-lg sm:text-2xl font-black tracking-tight text-slate-900 leading-none">
                     ReSell<span className="text-amber-500">BD</span>
                   </span>
                   <span className="text-[10px] font-semibold text-slate-400 tracking-wider uppercase mt-0.5 hidden sm:block">
@@ -559,7 +559,7 @@ export default function Navbar() {
             </div>
 
             {/* Right: Search, Wishlist, Post Ad CTA & User Profile */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-2.5 md:gap-3 shrink-0">
               {/* Search Bar - Desktop & Tablet */}
               <div ref={searchContainerRef} className="hidden md:flex items-center relative">
                 <form
@@ -692,7 +692,7 @@ export default function Navbar() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsMobileSearchOpen((prev) => !prev)}
-                className="md:hidden rounded-full hover:bg-slate-100 text-slate-700 h-9 w-9 cursor-pointer"
+                className="md:hidden rounded-full hover:bg-slate-100 text-slate-700 h-8 w-8 sm:h-9 sm:w-9 p-0 shrink-0 cursor-pointer"
                 aria-label="Toggle mobile search"
               >
                 <Search className="w-4 h-4" />
@@ -701,27 +701,27 @@ export default function Navbar() {
               {/* Wishlist Button */}
               <Link
                 href="/wishlist"
-                className="relative p-2 rounded-full text-slate-700 hover:text-amber-600 hover:bg-amber-50/80 transition-colors group"
+                className="relative p-1.5 sm:p-2 rounded-full text-slate-700 hover:text-amber-600 hover:bg-amber-50/80 transition-colors group shrink-0"
                 title="View Wishlist"
                 aria-label="Wishlist"
               >
-                <Heart className="w-5 h-5 transition-transform group-hover:scale-110" />
+                <Heart className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:scale-110" />
                 {wishlistCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-amber-500 text-slate-950 font-bold text-[10px] min-w-4 h-4 px-1 rounded-full flex items-center justify-center border-2 border-white shadow-xs">
+                  <span className="absolute -top-0.5 -right-0.5 bg-amber-500 text-slate-950 font-bold text-[10px] min-w-3.5 h-3.5 sm:min-w-4 sm:h-4 px-1 rounded-full flex items-center justify-center border-2 border-white shadow-xs">
                     {wishlistCount > 9 ? "9+" : wishlistCount}
                   </span>
                 )}
               </Link>
 
               {/* Post Ad / Sell Item Button */}
-              <Link href={user ? "/user/dashboard/products/add-product" : "/login"}>
+              <Link href={user ? "/user/dashboard/products/add-product" : "/login"} className="shrink-0">
                 <Button
                   size="sm"
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold text-xs md:text-sm px-3.5 md:px-4 py-2 rounded-full shadow-xs hover:shadow-md transition-all flex items-center gap-1.5 cursor-pointer border border-amber-400/50"
+                  className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold text-xs md:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2 h-8 sm:h-9 rounded-full shadow-xs hover:shadow-md transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer border border-amber-400/50"
                 >
-                  <PlusCircle className="w-4 h-4" />
+                  <PlusCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                   <span className="hidden sm:inline">Post Ad</span>
-                  <span className="sm:hidden">Sell</span>
+                  <span className="sm:hidden text-xs">Sell</span>
                 </Button>
               </Link>
 
@@ -729,7 +729,7 @@ export default function Navbar() {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-2 p-1 pl-1.5 pr-2.5 rounded-full border border-slate-200 hover:border-amber-400 hover:bg-amber-50/40 transition-all outline-hidden cursor-pointer group">
+                    <button className="flex items-center gap-1 sm:gap-2 p-1 pl-1 sm:pl-1.5 pr-1.5 sm:pr-2.5 rounded-full border border-slate-200 hover:border-amber-400 hover:bg-amber-50/40 transition-all outline-hidden cursor-pointer group shrink-0">
                       <Avatar className="w-7 h-7 sm:w-8 sm:h-8 border border-amber-400/60 shadow-2xs">
                         <AvatarFallback className="bg-gradient-to-br from-amber-500 to-amber-600 text-slate-950 font-bold text-xs">
                           {user.identifier
@@ -839,24 +839,26 @@ export default function Navbar() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <Link href="/login">
+                <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+                  <Link href="/login" className="shrink-0">
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="font-medium text-slate-700 hover:text-amber-600 hover:bg-amber-50 rounded-full px-3 text-xs md:text-sm"
+                      className="font-medium text-slate-700 hover:text-amber-600 hover:bg-amber-50 rounded-full px-2 sm:px-3 text-xs md:text-sm h-8 sm:h-9 flex items-center gap-1 cursor-pointer"
+                      aria-label="Sign In"
+                      title="Sign In"
                     >
-                      <LogInIcon className="w-4 h-4 mr-1 text-slate-500" />
-                      Sign In
+                      <LogInIcon className="w-4 h-4 sm:mr-1 text-slate-500 shrink-0" />
+                      <span className="hidden sm:inline">Sign In</span>
                     </Button>
                   </Link>
-                  <Link href="/register" className="hidden sm:inline-block">
+                  <Link href="/register" className="hidden sm:inline-block shrink-0">
                     <Button
                       variant="outline"
                       size="sm"
-                      className="border-slate-300 hover:border-amber-500 hover:text-amber-600 font-medium rounded-full px-3.5 text-xs md:text-sm"
+                      className="border-slate-300 hover:border-amber-500 hover:text-amber-600 font-medium rounded-full px-3.5 text-xs md:text-sm h-8 sm:h-9 cursor-pointer"
                     >
-                      <UserPlus className="w-4 h-4 mr-1" />
+                      <UserPlus className="w-4 h-4 mr-1 shrink-0" />
                       Register
                     </Button>
                   </Link>
@@ -869,7 +871,7 @@ export default function Navbar() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="lg:hidden rounded-full hover:bg-slate-100 text-slate-700 h-9 w-9"
+                    className="lg:hidden rounded-full hover:bg-slate-100 text-slate-700 h-8 w-8 sm:h-9 sm:w-9 p-0 shrink-0 cursor-pointer"
                     aria-label="Open navigation menu"
                   >
                     <Menu className="w-5 h-5" />
@@ -877,7 +879,7 @@ export default function Navbar() {
                 </SheetTrigger>
                 <SheetContent
                   side="right"
-                  className="w-[310px] sm:w-[360px] p-0 flex flex-col bg-white"
+                  className="w-[300px] sm:w-[360px] max-w-[85vw] p-0 flex flex-col bg-white"
                 >
                   {/* Sheet Header */}
                   <SheetHeader className="p-4 border-b border-slate-100 flex flex-row items-center justify-between text-left">
@@ -1155,7 +1157,7 @@ export default function Navbar() {
 
         {/* Mobile Search Bar Collapsible Panel */}
         {isMobileSearchOpen && (
-          <div className="md:hidden px-4 py-2.5 bg-slate-50 border-t border-slate-200/80 animate-in slide-in-from-top-2 duration-150">
+          <div className="md:hidden px-3 sm:px-4 py-2.5 bg-slate-50 border-t border-slate-200/80 animate-in slide-in-from-top-2 duration-150">
             <form onSubmit={handleSearch} className="relative flex items-center">
               <button
                 type="submit"
