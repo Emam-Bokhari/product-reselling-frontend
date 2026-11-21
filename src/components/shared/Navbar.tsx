@@ -122,6 +122,10 @@ export const MegaMenu = ({ onClose }: { onClose?: () => void }) => {
   }, []);
 
   const sortedProducts = [...products]
+    .filter((p) => {
+      const status = p?.status?.toLowerCase()?.trim();
+      return status !== "sold" && status !== "soldout" && status !== "sold out";
+    })
     .sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -384,6 +388,10 @@ export default function Navbar() {
     const q = searchQuery.trim().toLowerCase();
     if (!q || allProducts.length === 0) return [];
     return allProducts
+      .filter((p) => {
+        const status = p?.status?.toLowerCase()?.trim();
+        return status !== "sold" && status !== "soldout" && status !== "sold out";
+      })
       .filter((p) =>
         [p.title, p.category, p.location, p.brand, p.description].some((field) =>
           field?.toLowerCase().includes(q)

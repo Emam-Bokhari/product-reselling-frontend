@@ -8,8 +8,20 @@ import { TProduct } from "@/types";
 import Link from "next/link";
 
 export default async function ProductSection() {
-  const { data: products }: { data: TProduct[] } = await getAllProducts();
-  console.log(products);
+  let products: TProduct[] = [];
+
+  try {
+    const res = await getAllProducts();
+    products = res?.data || [];
+  } catch (error) {
+    console.error("Failed to load products in ProductSection:", error);
+  }
+
+  // Filter out sold out products so that only available products are shown on the home page
+  const availableProducts = products.filter((product) => {
+    const status = product?.status?.toLowerCase()?.trim();
+    return status !== "sold" && status !== "soldout" && status !== "sold out";
+  });
 
   return (
     <Container className="mt-12">
@@ -25,13 +37,13 @@ export default async function ProductSection() {
       </div>
       {/* cards */}
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {products?.length === 0
+        {availableProducts.length === 0
           ? Array.from({ length: 8 }).map((_, index) => (
               <ProductSkeleton key={index} />
             ))
-          : products
-              ?.slice(0, 16)
-              ?.map((product) => (
+          : availableProducts
+              .slice(0, 16)
+              .map((product) => (
                 <ProductCard key={product?._id} product={product} />
               ))}
       </div>
