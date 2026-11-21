@@ -49,22 +49,22 @@ export const CATEGORIES_CONFIG = [
 export const CONDITIONS_CONFIG = [
   {
     id: "new",
-    label: "new",
+    label: "New",
     dotColor: "bg-emerald-500",
   },
   {
     id: "likeNew",
-    label: "likeNew",
+    label: "Like New",
     dotColor: "bg-amber-500",
   },
   {
     id: "used",
-    label: "used",
+    label: "Used",
     dotColor: "bg-blue-500",
   },
   {
     id: "refurbished",
-    label: "refurbished",
+    label: "Refurbished",
     dotColor: "bg-purple-500",
   },
 ];
@@ -143,9 +143,14 @@ export default function SidebarFilters({
   };
 
   const toggleCondition = (condId: string) => {
-    setSelectedConditions((prev) =>
-      prev.includes(condId) ? prev.filter((c) => c !== condId) : [...prev, condId]
-    );
+    setSelectedConditions((prev) => {
+      const exists = prev.some((c) => c.toLowerCase() === condId.toLowerCase());
+      if (exists) {
+        return prev.filter((c) => c.toLowerCase() !== condId.toLowerCase());
+      } else {
+        return [...prev, condId];
+      }
+    });
   };
 
   const toggleDistrict = (dist: string) => {
@@ -409,8 +414,13 @@ export default function SidebarFilters({
           <AccordionContent className="pt-1 pb-3">
             <div className="space-y-1">
               {CONDITIONS_CONFIG.map((cond) => {
-                const isChecked = selectedConditions.includes(cond.id);
-                const count = conditionCounts[cond.id] || 0;
+                const isChecked = selectedConditions.some(
+                  (c) => c.toLowerCase() === cond.id.toLowerCase()
+                );
+                const count =
+                  conditionCounts[cond.id] ??
+                  conditionCounts[cond.id.toLowerCase()] ??
+                  0;
 
                 return (
                   <button

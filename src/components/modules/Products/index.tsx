@@ -122,8 +122,19 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
 
       // Condition count
       if (prod.condition) {
-        const clean = prod.condition.toLowerCase().replace(/[\s-_]/g, "");
-        condCounts[clean] = (condCounts[clean] || 0) + 1;
+        const clean = prod.condition.trim();
+        const lower = clean.toLowerCase().replace(/[\s-_]/g, "");
+
+        let normalizedId = clean;
+        if (lower === "likenew") normalizedId = "likeNew";
+        else if (lower === "new") normalizedId = "new";
+        else if (lower === "used") normalizedId = "used";
+        else if (lower === "refurbished") normalizedId = "refurbished";
+
+        condCounts[normalizedId] = (condCounts[normalizedId] || 0) + 1;
+        if (normalizedId !== lower) {
+          condCounts[lower] = (condCounts[lower] || 0) + 1;
+        }
       }
 
       // District count
@@ -577,25 +588,33 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
                     ))}
 
                     {/* Condition Chips */}
-                    {selectedConditions.map((cond) => (
-                      <span
-                        key={cond}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 font-medium"
-                      >
-                        <span>{cond}</span>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setSelectedConditions((prev) =>
-                              prev.filter((c) => c !== cond)
-                            )
-                          }
-                          className="hover:text-slate-900 cursor-pointer"
+                    {selectedConditions.map((cond) => {
+                      const displayLabel =
+                        cond.toLowerCase() === "likenew"
+                          ? "Like New"
+                          : cond.charAt(0).toUpperCase() + cond.slice(1);
+                      return (
+                        <span
+                          key={cond}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 font-medium"
                         >
-                          <X className="w-3 h-3" />
-                        </button>
-                      </span>
-                    ))}
+                          <span>{displayLabel}</span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setSelectedConditions((prev) =>
+                                prev.filter(
+                                  (c) => c.toLowerCase() !== cond.toLowerCase()
+                                )
+                              )
+                            }
+                            className="hover:text-slate-900 cursor-pointer"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </span>
+                      );
+                    })}
 
                     {/* District Chips */}
                     {selectedDistricts.map((dist) => (
