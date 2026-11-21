@@ -21,7 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginValidation } from "./login.validation";
 import { loginUser } from "@/services/Auth";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { verifyToken } from "@/lib/verifyToken";
 import { setUser, TUser } from "@/redux/features/authSlice";
@@ -33,6 +33,8 @@ export default function LoginForm() {
   const dispatch = useAppDispatch();
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get("redirectPath");
 
   const form = useForm({
     resolver: zodResolver(loginValidation),
@@ -60,7 +62,11 @@ export default function LoginForm() {
         toast.success(`${roleText} login successfully`);
 
         dispatch(setUser({ user: user, token: response.data?.token }));
-        router.push("/");
+        const target =
+          redirectPath && redirectPath.startsWith("/") && !redirectPath.startsWith("//")
+            ? redirectPath
+            : "/";
+        router.push(target);
       } else {
         toast.error(response?.error?.[0]?.message || response?.message || "Login failed");
       }
@@ -161,7 +167,14 @@ export default function LoginForm() {
           </FormProvider>
           <p className="text-center text-sm text-gray-600 mt-4">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-blue-500 hover:underline">
+            <Link
+              href={
+                redirectPath
+                  ? `/register?redirectPath=${encodeURIComponent(redirectPath)}`
+                  : "/register"
+              }
+              className="text-blue-500 hover:underline"
+            >
               Sign up
             </Link>
           </p>

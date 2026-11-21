@@ -21,9 +21,14 @@ export const middleware = async (request: NextRequest) => {
         if (authRoutes.includes(pathname)) {
             return NextResponse.next()
         } else {
-            return NextResponse.redirect(
-                new URL("/login", request.url)
-            )
+            const redirectUrl = new URL("/login", request.url);
+            const checkoutId = request.nextUrl.searchParams.get("id");
+            if (pathname === "/checkout" && checkoutId) {
+                redirectUrl.searchParams.set("redirectPath", `/products/${checkoutId}`);
+            } else {
+                redirectUrl.searchParams.set("redirectPath", pathname + request.nextUrl.search);
+            }
+            return NextResponse.redirect(redirectUrl);
         }
     }
 

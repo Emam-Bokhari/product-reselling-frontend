@@ -16,10 +16,12 @@ import {
 import Link from "next/link";
 import { registerUser } from "@/services/Auth";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function RegistrationForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get("redirectPath");
   const form = useForm({
     resolver: zodResolver(registerValidation),
     defaultValues: {
@@ -39,10 +41,14 @@ export default function RegistrationForm() {
       const response = await registerUser(data);
 
       if (response?.success) {
-        toast.success(response?.message);
-        router.push("/login");
+        toast.success(response?.message || "Registration successful! Please login.");
+        if (redirectPath) {
+          router.push(`/login?redirectPath=${encodeURIComponent(redirectPath)}`);
+        } else {
+          router.push("/login");
+        }
       } else {
-        toast.error(response?.error[0]?.message);
+        toast.error(response?.error?.[0]?.message || response?.message || "Registration failed");
       }
     } catch {
       toast.error("Something went wrong!");
@@ -139,7 +145,14 @@ export default function RegistrationForm() {
 
           <p className="text-center text-sm text-gray-600 mt-4">
             Already have an account?{" "}
-            <Link href="/login" className="text-blue-500 hover:underline">
+            <Link
+              href={
+                redirectPath
+                  ? `/login?redirectPath=${encodeURIComponent(redirectPath)}`
+                  : "/login"
+              }
+              className="text-blue-500 hover:underline"
+            >
               Log in
             </Link>
           </p>

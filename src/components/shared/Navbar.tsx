@@ -333,6 +333,14 @@ export default function Navbar() {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const authRedirectQuery =
+    pathname &&
+    pathname !== "/" &&
+    !pathname.startsWith("/login") &&
+    !pathname.startsWith("/register")
+      ? `?redirectPath=${encodeURIComponent(pathname)}`
+      : "";
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [allProducts, setAllProducts] = useState<TProduct[]>([]);
@@ -714,7 +722,14 @@ export default function Navbar() {
               </Link>
 
               {/* Post Ad / Sell Item Button */}
-              <Link href={user ? "/user/dashboard/products/add-product" : "/login"} className="shrink-0">
+              <Link
+                href={
+                  user
+                    ? "/user/dashboard/products/add-product"
+                    : `/login?redirectPath=${encodeURIComponent("/user/dashboard/products/add-product")}`
+                }
+                className="shrink-0"
+              >
                 <Button
                   size="sm"
                   className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold text-xs md:text-sm px-2.5 sm:px-4 py-1.5 sm:py-2 h-8 sm:h-9 rounded-full shadow-xs hover:shadow-md transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer border border-amber-400/50"
@@ -840,7 +855,7 @@ export default function Navbar() {
                 </DropdownMenu>
               ) : (
                 <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-                  <Link href="/login" className="shrink-0">
+                  <Link href={`/login${authRedirectQuery}`} className="shrink-0">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -852,7 +867,7 @@ export default function Navbar() {
                       <span className="hidden sm:inline">Sign In</span>
                     </Button>
                   </Link>
-                  <Link href="/register" className="hidden sm:inline-block shrink-0">
+                  <Link href={`/register${authRedirectQuery}`} className="hidden sm:inline-block shrink-0">
                     <Button
                       variant="outline"
                       size="sm"
@@ -989,7 +1004,7 @@ export default function Navbar() {
                       </div>
                     ) : (
                       <div className="grid grid-cols-2 gap-2">
-                        <Link href="/login" onClick={() => setMobileOpen(false)}>
+                        <Link href={`/login${authRedirectQuery}`} onClick={() => setMobileOpen(false)}>
                           <Button
                             variant="outline"
                             size="sm"
@@ -1000,7 +1015,7 @@ export default function Navbar() {
                           </Button>
                         </Link>
                         <Link
-                          href="/register"
+                          href={`/register${authRedirectQuery}`}
                           onClick={() => setMobileOpen(false)}
                         >
                           <Button
@@ -1017,7 +1032,9 @@ export default function Navbar() {
                     {/* Post Ad Button Mobile */}
                     <Link
                       href={
-                        user ? "/user/dashboard/products/add-product" : "/login"
+                        user
+                          ? "/user/dashboard/products/add-product"
+                          : `/login?redirectPath=${encodeURIComponent("/user/dashboard/products/add-product")}`
                       }
                       onClick={() => setMobileOpen(false)}
                       className="block"

@@ -1,10 +1,10 @@
-import { Fragment } from "react";
+import { Suspense } from "react";
 import LoginForm from "@/components/modules/Auth/Login/LoginForm";
 
 export default function LoginPage() {
   return (
-    <Fragment>
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">Loading...</div>}>
       <LoginForm />
-    </Fragment>
+    </Suspense>
   );
 }
