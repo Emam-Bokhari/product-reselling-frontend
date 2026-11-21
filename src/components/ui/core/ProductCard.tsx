@@ -45,6 +45,7 @@ export default function ProductCard({
     createdAt,
   } = product || {};
 
+  const user = useSelector((state: RootState) => state.auth?.user);
   const wishlistItems = useSelector((state: RootState) => state.wishlist.items);
   const isInWishlist = wishlistItems.some((item) => item._id === _id);
 
@@ -64,6 +65,10 @@ export default function ProductCard({
     e.preventDefault();
     e.stopPropagation();
     if (status === "sold") return;
+    if (!user) {
+      router.push(`/login?redirectPath=/products/${_id}`);
+      return;
+    }
     router.push(`/checkout?id=${_id}`);
   };
 

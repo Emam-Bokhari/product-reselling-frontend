@@ -5,16 +5,24 @@ import { TProduct } from "@/types";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 // import RelatedProducts from "./RelatedProducts";
 
 export default function ProductDetails({ product }: { product: TProduct }) {
   const [selectedImage, setSelectedImage] = useState(product?.images[0]);
   const router = useRouter();
+  const user = useSelector((state: RootState) => state.auth?.user);
+
   const handleThumbnailClick = (image: string) => {
     setSelectedImage(image);
   };
 
   const handleBuyNow = () => {
+    if (!user) {
+      router.push(`/login?redirectPath=/products/${product._id}`);
+      return;
+    }
     router.push(`/checkout?id=${product._id}`);
   };
 

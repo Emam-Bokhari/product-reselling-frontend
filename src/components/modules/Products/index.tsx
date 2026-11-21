@@ -61,9 +61,10 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   // Scroll to View (Infinite Scroll) Pagination States
-  const ITEMS_PER_BATCH = 6;
+  const ITEMS_PER_BATCH = 12;
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_BATCH);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const loadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Sync with URL query parameters (?search=..., ?category=..., ?location=...)
   useEffect(() => {
@@ -93,13 +94,18 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
   // Reset pagination count when any filter changes
   useEffect(() => {
     setVisibleCount(ITEMS_PER_BATCH);
+    setIsLoadingMore(false);
+    if (loadTimeoutRef.current) {
+      clearTimeout(loadTimeoutRef.current);
+    }
   }, [
     searchTerm,
     sortOrder,
     selectedCategories,
     selectedConditions,
     selectedDistricts,
-    priceRange,
+    priceRange.min,
+    priceRange.max,
     isAvailable,
     isNegotiable,
   ]);
@@ -257,44 +263,44 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
   }, [filteredProducts, visibleCount]);
   const hasMore = visibleCount < totalItems;
 
-  const isLoadingRef = useRef(false);
-  const hasMoreRef = useRef(hasMore);
-
-  useEffect(() => {
-    hasMoreRef.current = hasMore;
-  }, [hasMore]);
-
-  useEffect(() => {
-    isLoadingRef.current = isLoadingMore;
-  }, [isLoadingMore]);
-
   const loadMore = useCallback(() => {
-    if (isLoadingRef.current || !hasMoreRef.current) return;
-    isLoadingRef.current = true;
+    if (isLoadingMore || !hasMore) return;
     setIsLoadingMore(true);
 
-    setTimeout(() => {
-      setVisibleCount((prev) => prev + ITEMS_PER_BATCH);
+    if (loadTimeoutRef.current) {
+      clearTimeout(loadTimeoutRef.current);
+    }
+
+    loadTimeoutRef.current = setTimeout(() => {
+      setVisibleCount((prev) => Math.min(prev + ITEMS_PER_BATCH, totalItems));
       setIsLoadingMore(false);
-      isLoadingRef.current = false;
-    }, 450);
+    }, 200);
+  }, [isLoadingMore, hasMore, totalItems]);
+
+  // Clean up timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (loadTimeoutRef.current) {
+        clearTimeout(loadTimeoutRef.current);
+      }
+    };
   }, []);
 
   useEffect(() => {
     const target = observerTargetRef.current;
-    if (!target) return;
+    if (!target || !hasMore) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        if (entry.isIntersecting && hasMoreRef.current && !isLoadingRef.current) {
+        if (entry.isIntersecting && !isLoadingMore) {
           loadMore();
         }
       },
       {
         root: null,
-        rootMargin: "250px", // Trigger 250px before reaching the bottom
-        threshold: 0.1,
+        rootMargin: "350px", // Trigger 350px before reaching the bottom
+        threshold: 0.05,
       }
     );
 
@@ -303,7 +309,7 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
     return () => {
       observer.disconnect();
     };
-  }, [loadMore, totalItems, hasMore]);
+  }, [hasMore, isLoadingMore, loadMore, visibleCount]);
 
   const updateQueryParam = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -326,6 +332,10 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
     setIsNegotiable(false);
     setSortOrder("newest");
     setVisibleCount(ITEMS_PER_BATCH);
+    setIsLoadingMore(false);
+    if (loadTimeoutRef.current) {
+      clearTimeout(loadTimeoutRef.current);
+    }
     router.replace("/products");
   };
 
@@ -712,7 +722,7 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
                 </div>
 
                 {/* SKELETON PLACEHOLDERS WHILE LOADING MORE */}
-                {isLoadingMore && (
+                {isLoadingMore && hasMore && (
                   <div className="mt-5 space-y-4">
                     <div
                       className={
@@ -722,7 +732,7 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
                       }
                     >
                       {Array.from({
-                        length: Math.min(3, totalItems - visibleCount),
+                        length: Math.max(0, Math.min(3, totalItems - visibleCount)),
                       }).map((_, i) => (
                         <ProductSkeleton key={`loading-skeleton-${i}`} />
                       ))}
@@ -734,18 +744,25 @@ export default function AllProducts({ products = [] }: AllProductsProps) {
                 {hasMore && (
                   <div
                     ref={observerTargetRef}
-                    className="py-8 flex flex-col items-center justify-center min-h-[70px]"
+                    className="py-8 flex flex-col items-center justify-center min-h-[80px]"
                   >
                     {isLoadingMore ? (
-                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-amber-200 text-amber-700 text-xs font-semibold shadow-xs animate-pulse">
+                      <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-amber-200 text-amber-700 text-xs font-semibold shadow-xs animate-pulse">
                         <Loader2 className="w-4 h-4 animate-spin text-amber-500" />
                         <span>Loading more products...</span>
                       </div>
                     ) : (
-                      <div className="text-[11px] text-slate-400 font-medium flex items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping inline-block" />
-                        <span>Scroll down to load more products</span>
-                      </div>
+                      <button
+                        type="button"
+                        onClick={loadMore}
+                        className="group inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white hover:bg-amber-50 border border-slate-200 hover:border-amber-300 text-slate-600 hover:text-amber-800 text-xs font-medium shadow-xs transition-all cursor-pointer"
+                      >
+                        <span className="w-2 h-2 rounded-full bg-amber-500 group-hover:animate-ping inline-block" />
+                        <span>Load more products</span>
+                        <span className="text-[11px] text-slate-400">
+                          ({totalItems - visibleCount} remaining)
+                        </span>
+                      </button>
                     )}
                   </div>
                 )}

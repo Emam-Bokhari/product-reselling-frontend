@@ -154,8 +154,11 @@ export default function SidebarFilters({
   };
 
   const toggleDistrict = (dist: string) => {
+    const norm = dist.toLowerCase().trim();
     setSelectedDistricts((prev) =>
-      prev.includes(dist) ? prev.filter((d) => d !== dist) : [...prev, dist]
+      prev.some((d) => d.toLowerCase().trim() === norm)
+        ? prev.filter((d) => d.toLowerCase().trim() !== norm)
+        : [...prev, norm]
     );
   };
 
@@ -486,8 +489,9 @@ export default function SidebarFilters({
             {/* Quick popular chips */}
             <div className="flex flex-wrap gap-1.5 mb-2.5">
               {POPULAR_DISTRICTS.map((dist) => {
-                const isSelected = selectedDistricts.includes(dist);
-                const count = districtCounts[dist] || 0;
+                const normDist = dist.toLowerCase().trim();
+                const isSelected = selectedDistricts.some((d) => d.toLowerCase().trim() === normDist);
+                const count = districtCounts[dist] ?? districtCounts[normDist] ?? 0;
                 return (
                   <button
                     key={dist}
@@ -530,8 +534,9 @@ export default function SidebarFilters({
             <div className="max-h-44 overflow-y-auto space-y-0.5 pr-1 text-xs">
               {filteredDistricts.length > 0 ? (
                 filteredDistricts.map((item) => {
-                  const isChecked = selectedDistricts.includes(item);
-                  const count = districtCounts[item] || 0;
+                  const normItem = item.toLowerCase().trim();
+                  const isChecked = selectedDistricts.some((d) => d.toLowerCase().trim() === normItem);
+                  const count = districtCounts[item] ?? districtCounts[normItem] ?? 0;
 
                   return (
                     <button
@@ -556,11 +561,17 @@ export default function SidebarFilters({
                         </div>
                         <span>{item}</span>
                       </div>
-                      {count > 0 && (
-                        <span className="text-[10px] text-amber-700 bg-amber-100 px-1.5 py-0.2 rounded font-semibold">
-                          {count}
-                        </span>
-                      )}
+                      <span
+                        className={`text-[10px] px-1.5 py-0.2 rounded font-semibold ${
+                          count > 0
+                            ? isChecked
+                              ? "bg-amber-200/60 text-amber-900 font-bold"
+                              : "text-amber-700 bg-amber-100"
+                            : "text-slate-400 bg-slate-100"
+                        }`}
+                      >
+                        {count}
+                      </span>
                     </button>
                   );
                 })
