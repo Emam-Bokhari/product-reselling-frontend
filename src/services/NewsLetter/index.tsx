@@ -3,6 +3,15 @@
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
+const getAuthToken = async () => {
+  try {
+    const cookieStore = await cookies();
+    return cookieStore.get("accessToken")?.value || null;
+  } catch {
+    return null;
+  }
+};
+
 export const addNewsLetter = async (newsLetterData: any) => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/newsLetters`, {
@@ -15,15 +24,17 @@ export const addNewsLetter = async (newsLetterData: any) => {
     revalidateTag("NEWSLETTER");
 
     const data = await res.json();
-
     return data;
   } catch (error: any) {
-    throw new Error(error);
+    return { success: false, message: error?.message || "Failed to subscribe" };
   }
 };
 
 export const getAllNewsLetters = async () => {
   try {
+    const token = await getAuthToken();
+    if (!token) return { data: [] };
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_API}/newsLetters`,
       {
@@ -33,15 +44,15 @@ export const getAllNewsLetters = async () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: (await cookies()).get("accessToken")!.value,
+          Authorization: token,
         },
       }
     );
 
+    if (!response.ok) return { data: [] };
     const data = await response.json();
-
     return data;
-  } catch (error: any) {
-    throw new Error(error);
+  } catch {
+    return { data: [] };
   }
 };

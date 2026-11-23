@@ -34,30 +34,49 @@ export const loginUser = async (userData: FieldValues) => {
         const result = await res.json()
 
         const storeCookies = await cookies();
-        if (result?.success) {
-            storeCookies.set("accessToken", result?.data?.token)
+        if (result?.success && result?.data?.token) {
+            storeCookies.set("accessToken", result.data.token, {
+                path: "/",
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                maxAge: 7 * 24 * 60 * 60, // 7 days
+            });
         }
 
         return result;
 
     } catch (error: any) {
-        return Error(error)
+        return { success: false, message: error?.message || "Login failed" };
     }
 }
 
 export const getCurrentUser = async () => {
-    const accessToken = (await cookies()).get("accessToken")?.value;
-    let decodedData = null;
+    try {
+        const accessToken = (await cookies()).get("accessToken")?.value;
+        if (!accessToken) {
+            return null;
+        }
 
-    if (accessToken) {
-        decodedData = await jwtDecode(accessToken);
+        const decodedData = jwtDecode(accessToken) as any;
+        if (decodedData && typeof decodedData === "object" && decodedData.exp) {
+            // Check if token has expired
+            if (decodedData.exp * 1000 < Date.now()) {
+                return null;
+            }
+        }
         return decodedData;
-    } else {
+    } catch {
         return null;
     }
 };
 
 export const logoutFromCookie = async () => {
-    (await cookies()).delete("accessToken");
+    const storeCookies = await cookies();
+    storeCookies.set("accessToken", "", {
+        path: "/",
+        httpOnly: true,
+        maxAge: 0,
+    });
 };
 

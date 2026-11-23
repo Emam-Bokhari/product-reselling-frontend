@@ -4,7 +4,9 @@ import UserProfile from "@/components/modules/Dashboard/UserProfile";
 import { getMe } from "@/services/User";
 
 export default async function UserProfilePage() {
-  const { data: profileData } = await getMe();
+  const res = await getMe().catch(() => null);
+  const profileData = res?.data || null;
+
   return (
     <Fragment>
       <UserProfile profileData={profileData} />

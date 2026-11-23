@@ -62,11 +62,14 @@ export default function LoginForm() {
         toast.success(`${roleText} login successfully`);
 
         dispatch(setUser({ user: user, token: response.data?.token }));
+        const defaultDestination =
+          user?.role === "admin" ? "/admin/dashboard" : "/user/dashboard";
         const target =
           redirectPath && redirectPath.startsWith("/") && !redirectPath.startsWith("//")
             ? redirectPath
-            : "/";
+            : defaultDestination;
         router.push(target);
+        router.refresh();
       } else {
         toast.error(response?.error?.[0]?.message || response?.message || "Login failed");
       }

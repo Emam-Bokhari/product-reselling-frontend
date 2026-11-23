@@ -47,19 +47,23 @@ export default function ProductCardVariant({ product }: { product: TProduct }) {
         </div>
       )}
       {/* Product Image */}
-      <div className="relative w-full h-48">
-        <Image
-          src={images?.[0]}
-          alt="Illuminated wooden letters"
-          layout="fill"
-          objectFit="cover"
-          className="rounded-lg"
-        />
-      </div>
+      <Link href={`/products/${product?._id}`} className="block">
+        <div className="relative w-full h-48 cursor-pointer">
+          <Image
+            src={images?.[0] || "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600&auto=format&fit=crop"}
+            alt={title || "Product image"}
+            layout="fill"
+            objectFit="cover"
+            className="rounded-lg"
+          />
+        </div>
+      </Link>
       {/* Product Title */}
-      <h3 className="text-lg font-semibold capitalize mt-4">
-        {title?.length > 20 ? title?.slice(0, 20) + "..." : title}
-      </h3>
+      <Link href={`/products/${product?._id}`} className="block hover:text-amber-600 transition-colors">
+        <h3 className="text-lg font-semibold capitalize mt-4">
+          {title?.length > 20 ? title?.slice(0, 20) + "..." : title}
+        </h3>
+      </Link>
       {/* Price */}
 
       <span className=" font-bold text-[#F59E0B]">BDT {price}</span>
@@ -81,8 +85,8 @@ export default function ProductCardVariant({ product }: { product: TProduct }) {
               <Heart className="w-5 h-5" />
             )}
           </button>
-          <Link href={`/category/category/${product._id}`}>
-            <button className=" cursor-pointer ml-4">
+          <Link href={`/products/${product?._id}`}>
+            <button className=" cursor-pointer ml-4" title="View details">
               <IoArrowRedo className="w-6 h-6 text-blue-600 " />
             </button>
           </Link>

@@ -42,33 +42,47 @@ export const getBlogById = async (id: string) => {
     }
 };
 
+const getAuthToken = async () => {
+    try {
+        const cookieStore = await cookies();
+        return cookieStore.get("accessToken")?.value || null;
+    } catch {
+        return null;
+    }
+};
+
 export const addBlog = async (blogData: any) => {
     try {
+        const token = await getAuthToken();
+        if (!token) return { success: false, message: "Unauthorized" };
+
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/blogs`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: (await cookies()).get("accessToken")!.value,
+                Authorization: token,
             },
             body: JSON.stringify(blogData),
         });
         revalidateTag("BLOG");
 
         const data = await res.json();
-
         return data;
     } catch (error: any) {
-        throw new Error(error);
+        return { success: false, message: error?.message || "Failed to add blog" };
     }
 };
 
 export const updateBlogById = async (id: string, updatedBlogData: any) => {
     try {
+        const token = await getAuthToken();
+        if (!token) return { success: false, message: "Unauthorized" };
+
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/blogs/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: (await cookies()).get("accessToken")!.value,
+                Authorization: token,
             },
             body: JSON.stringify(updatedBlogData),
         });
@@ -76,23 +90,26 @@ export const updateBlogById = async (id: string, updatedBlogData: any) => {
         const data = await res.json();
         return data;
     } catch (error: any) {
-        throw new Error(error);
+        return { success: false, message: error?.message || "Failed to update blog" };
     }
 };
 
 export const deleteBlogById = async (id: string) => {
     try {
+        const token = await getAuthToken();
+        if (!token) return { success: false, message: "Unauthorized" };
+
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/blogs/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: (await cookies()).get("accessToken")!.value,
+                Authorization: token,
             },
         });
         revalidateTag("BLOG");
         const data = await res.json();
         return data;
     } catch (error: any) {
-        throw new Error(error);
+        return { success: false, message: error?.message || "Failed to delete blog" };
     }
 };

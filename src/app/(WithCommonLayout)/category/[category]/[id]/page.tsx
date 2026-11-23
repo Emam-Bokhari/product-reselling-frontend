@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { Fragment } from "react";
+import Link from "next/link";
 import { getProductById } from "@/services/Product";
 import { TProduct } from "@/types";
 import CategoryWiseProductDetails from "@/components/modules/Category";
@@ -15,11 +16,17 @@ export default async function CategoryWiseProductDetailsPage({
 
   if (!product) {
     return (
-      <Fragment>
-        <p className="text-center mt-[5%] text-gray-500 text-lg">
+      <div className="min-h-[50vh] flex flex-col items-center justify-center text-center px-4">
+        <p className="text-gray-500 text-lg mb-4">
           Product not found
         </p>
-      </Fragment>
+        <Link
+          href="/products"
+          className="inline-flex items-center justify-center px-5 py-2.5 bg-amber-500 text-white rounded-xl text-sm font-semibold hover:bg-amber-600 transition-colors shadow-xs"
+        >
+          Browse All Products
+        </Link>
+      </div>
     );
   }
 
