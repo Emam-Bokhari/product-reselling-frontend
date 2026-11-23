@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import AllProducts from "@/components/modules/Products";
 import { getAllProducts } from "@/services/Product";
 import { TProduct } from "@/types";

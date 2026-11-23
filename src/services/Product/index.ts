@@ -4,46 +4,64 @@ import { cookies } from "next/headers";
 
 export const getAllProducts = async () => {
     try {
+        if (!process.env.NEXT_PUBLIC_BASE_API) {
+            return { data: [] };
+        }
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/listings`, {
             next: {
                 tags: ["PRODUCT"],
                 revalidate: 30,
             }
         });
+        if (!res.ok) {
+            return { data: [] };
+        }
         const data = await res.json();
         return data;
-    } catch (error: any) {
-        throw new Error(error)
+    } catch {
+        return { data: [] };
     }
 }
 
 export const getProductsByCategory = async (category: string) => {
     try {
+        if (!process.env.NEXT_PUBLIC_BASE_API) {
+            return { data: [] };
+        }
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/listings/category/${category}`, {
             next: {
                 tags: ["PRODUCT"],
                 revalidate: 30,
             }
         });
+        if (!res.ok) {
+            return { data: [] };
+        }
         const data = await res.json();
         return data;
-    } catch (error: any) {
-        throw new Error(error)
+    } catch {
+        return { data: [] };
     }
 }
 
 export const getProductById = async (id: string) => {
     try {
+        if (!process.env.NEXT_PUBLIC_BASE_API) {
+            return { data: null };
+        }
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/listings/${id}`, {
             cache: "no-store",
             next: {
                 tags: ["PRODUCT"]
             }
         });
+        if (!res.ok) {
+            return { data: null };
+        }
         const data = await res.json();
         return data;
-    } catch (error: any) {
-        throw new Error(error)
+    } catch {
+        return { data: null };
     }
 }
 

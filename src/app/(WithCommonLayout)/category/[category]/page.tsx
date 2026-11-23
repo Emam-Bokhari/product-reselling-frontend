@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Container from "@/components/shared/Container";
 import ProductCardVariant from "@/components/ui/core/ProductCardVariant";
 import { getProductsByCategory } from "@/services/Product";

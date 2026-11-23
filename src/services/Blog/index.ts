@@ -4,33 +4,41 @@ import { cookies } from "next/headers";
 
 export const getAllBlogs = async () => {
     try {
+        if (!process.env.NEXT_PUBLIC_BASE_API) {
+            return { data: [] };
+        }
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/blogs`, {
             next: {
                 tags: ["BLOG"],
             },
         });
         if (!res.ok) {
-            const errorText = await res.text();
-            throw new Error(`API request failed with status ${res.status}: ${errorText}`);
+            return { data: [] };
         }
         const data = await res.json();
         return data;
     } catch (error: any) {
-        throw new Error(error?.message || error);
+        return { data: [], error: error?.message || error };
     }
 };
 
 export const getBlogById = async (id: string) => {
     try {
+        if (!process.env.NEXT_PUBLIC_BASE_API) {
+            return { data: null };
+        }
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/blogs/${id}`, {
             next: {
                 tags: ["BLOG"],
             },
         });
+        if (!res.ok) {
+            return { data: null };
+        }
         const data = await res.json();
         return data;
-    } catch (error: any) {
-        throw new Error(error);
+    } catch {
+        return { data: null };
     }
 };
 
