@@ -4,7 +4,7 @@ import ManageUsers from "@/components/modules/Dashboard/Users";
 import { getAllUsers } from "@/services/User";
 
 export default async function UsersManagementPage() {
-  const response = await getAllUsers().catch(() => ({ data: { result: [] } }));
+  const response = await getAllUsers(1000).catch(() => ({ data: { result: [] } }));
   const users = response?.data?.result ?? response?.data ?? [];
 
   return (

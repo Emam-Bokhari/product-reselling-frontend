@@ -57,13 +57,13 @@ export const updateProfile = async (updatedData: any) => {
     }
 }
 
-export const getAllUsers = async () => {
+export const getAllUsers = async (limit = 1000) => {
     try {
         const token = await getAuthToken();
         if (!token) {
             return { data: [] };
         }
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/users`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/users?limit=${limit}`, {
             next: {
                 tags: ["USER"],
             },
