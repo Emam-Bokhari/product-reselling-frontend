@@ -28,13 +28,29 @@ export const getProductsByCategory = async (category: string) => {
         if (!process.env.NEXT_PUBLIC_BASE_API) {
             return { data: [] };
         }
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/listings/category/${category}`, {
+        const norm = (category || "").toLowerCase().trim();
+        // Canonical mapping between URL slugs and DB category records
+        let targetCategory = norm;
+        if (norm === "mobile") targetCategory = "mobiles";
+        if (norm === "clothes" || norm === "fashion" || norm === "clothing") targetCategory = "cloths";
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/listings/category/${encodeURIComponent(targetCategory)}`, {
+            cache: "no-store",
             next: {
                 tags: ["PRODUCT"],
                 revalidate: 30,
             }
         });
         if (!res.ok) {
+            // Fallback: try raw category if canonical differed
+            if (targetCategory !== norm) {
+                const fallback = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/listings/category/${encodeURIComponent(norm)}`, {
+                    cache: "no-store",
+                });
+                if (fallback.ok) {
+                    return await fallback.json();
+                }
+            }
             return { data: [] };
         }
         const data = await res.json();
