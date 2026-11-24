@@ -6,17 +6,18 @@ ReSellBD is a modern, responsive web application designed for buying and selling
 
 ## Table of Contents
 
-- Overview
-- Key Features
-- Tech Stack
-- Project Architecture and Folder Structure
-- Environment Variables
-- Getting Started and Installation
-- Available Scripts
-- API and Service Architecture
-- Role-Based Access Control and Route Protection
-- Contributing
-- License
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Tech Stack](#tech-stack)
+- [Project Architecture and Folder Structure](#project-architecture-and-folder-structure)
+- [Environment Variables](#environment-variables)
+- [Getting Started and Installation](#getting-started-and-installation)
+- [Available Scripts](#available-scripts)
+- [API and Service Architecture](#api-and-service-architecture)
+- [Role-Based Access Control and Route Protection](#role-based-access-control-and-route-protection)
+- [Contributing](#contributing)
+- [Contact and Support](#contact-and-support)
+- [License](#license)
 
 ---
 
@@ -265,3 +266,9 @@ For questions, issues, or feedback regarding ReSellBD, please reach out through 
 - Email: moshfiqurrahman37@gmail.com
 - GitHub: https://github.com/Emam-Bokhari
 - Linkedin: www.linkedin.com/in/moshfiqurrahman37
+
+---
+
+## License
+
+This project is licensed under the MIT License.
