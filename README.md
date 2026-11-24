@@ -1,141 +1,267 @@
-# 🛒 ResellBD - Frontend
+# ReSellBD - Client
 
-ResellBD is an online platform that facilitates the buying and selling of second-hand products with ease. This repository contains the **frontend** of the ResellBD platform, built using modern web technologies to ensure a seamless user experience.
-
----
-
-## 🚀 Features
-
-✅ **User-Friendly Interface** - A seamless and intuitive UI for buyers and sellers.  
-✅ **Product Listings** - Users can list, browse, and purchase second-hand products.  
-✅ **Category-Based Navigation** - Browse products by category for quick access.  
-✅ **Secure Authentication** - Login and register using Custom Authentication.  
-✅ **Real-Time Search & Filters** - Advanced search and filtering for better discovery.  
-✅ **Admin Dashboard** - Manage users, listings, and reports efficiently.  
-✅ **Mobile Responsiveness** - Optimized for all screen sizes and devices.
+ReSellBD is a modern, responsive web application designed for buying and selling second-hand products. This repository contains the complete frontend client of the ReSellBD platform, built with Next.js 15 App Router, TypeScript, Redux Toolkit, and Tailwind CSS.
 
 ---
 
-## 🛠 Tech Stack
+## Table of Contents
 
-| Technology        | Purpose                             |
-| ----------------- | ----------------------------------- |
-| **Next.js 15**    | Frontend framework                  |
-| **ShadCN UI**     | Modern UI components                |
-| **Redux Toolkit** | State management                    |
-| **Tailwind CSS**  | Utility-first styling               |
-| **Custom Auth**   | User authentication & authorization |
+- Overview
+- Key Features
+- Tech Stack
+- Project Architecture and Folder Structure
+- Environment Variables
+- Getting Started and Installation
+- Available Scripts
+- API and Service Architecture
+- Role-Based Access Control and Route Protection
+- Contributing
+- License
 
 ---
 
-## 📂 Project Structure
+## Overview
+
+ReSellBD provides a peer-to-peer marketplace that empowers individuals to list pre-owned items, discover affordable second-hand goods, and manage transactions seamlessly. The frontend client is architected for optimal performance, accessibility, search engine indexing, and real-time state synchronization.
+
+---
+
+## Key Features
+
+### Public Marketplace
+- Product Catalog: Browse verified second-hand items across multiple categories with pagination.
+- Advanced Search and Filtering: Real-time search by keyword, category classification, and condition.
+- Detailed Product Pages: High-resolution image views, pricing details, seller information, and item condition reports.
+- Wishlist System: Save favorite products with persistent client-side storage.
+
+### Buyer and Seller Features
+- Product Listing Management: Create, update, and remove second-hand product listings.
+- Order and Purchase History: Track ordered items, transaction statuses, and invoice overviews.
+- Sales Tracking: Review incoming purchase requests and sales transactions.
+- User Profile: Manage account details, shipping information, and personal preferences.
+
+### Admin Dashboard
+- Analytics Overview: Visual charts and metric tracking for platform revenue, user growth, and active listings powered by Recharts.
+- User Administration: Monitor registered users, update permissions, and restrict accounts violating guidelines.
+- Content and Blog Management: Create, edit, and publish community articles and platform updates.
+- Inquiries and Newsletter: View customer contact messages and manage newsletter subscriber lists.
+
+### Security and State Architecture
+- Custom Authentication: Secure session management via JWT tokens stored in HTTP cookies.
+- Protected Middleware: Route-level access enforcement based on authenticated roles (User vs. Admin).
+- Global State Management: Redux Toolkit combined with Redux Persist for reliable user sessions and wishlist synchronization.
+
+---
+
+## Tech Stack
+
+### Core Framework and Language
+- Next.js 15 (App Router with Server and Client Components)
+- React 19
+- TypeScript
+
+### UI and Styling
+- Tailwind CSS
+- Radix UI Primitives / Shadcn UI Component System
+- Lucide React (Component Icons)
+- Sonner (Toast Notifications)
+- Recharts (Analytical Charts and Visualizations)
+
+### State Management and Forms
+- Redux Toolkit
+- Redux Persist
+- React Hook Form
+- Zod (Schema Validation)
+- @hookform/resolvers
+
+### Utilities and Networking
+- Native Fetch with Server Actions and Service Abstractions
+- jwt-decode (Token Parsing)
+- moment-timezone (Date and Time Formatting)
+- clsx and tailwind-merge (Dynamic Class Handling)
+
+---
+
+## Project Architecture and Folder Structure
 
 ```
-resellbd-frontend/
-│-- public/         # Static assets (images, icons, etc.)
-│-- src/
-│   ├── app/        # Application-level components and pages
-│   ├── assets/     # Images, fonts, and other static assets
-│   ├── components/ # Reusable UI components
-│   ├── constants/  # Constant values used throughout the app
-│   ├── lib/        # Utility functions and helper libraries
-│   ├── providers/  # Context and global state providers
-│   ├── redux/      # Redux state management
-│   ├── types/      # TypeScript type definitions
-│   ├── hooks/      # Custom React hooks
-│   ├── services/   # API and service-related functions
-│-- middleware.ts   # Middleware configuration
-│-- .env           # Environment variables
-│-- .gitignore     # Git ignore file
-│-- package.json   # Dependencies & scripts
-│-- README.md      # Project documentation
+resellbd-client/
+├── public/                         # Static assets, branding, and images
+├── src/
+│   ├── app/                        # Next.js App Router (Layouts and Pages)
+│   │   ├── (WithCommonLayout)/     # Layout with persistent Navbar and Footer
+│   │   │   ├── (home)/             # Marketplace landing page
+│   │   │   ├── aboutUs/            # Platform story and information
+│   │   │   ├── blogs/              # Blog listing and single article pages
+│   │   │   ├── category/           # Category-filtered product pages
+│   │   │   ├── checkout/           # Order placement and checkout workflow
+│   │   │   ├── contactUs/          # Customer inquiry and support page
+│   │   │   ├── faq/                # Frequently asked questions
+│   │   │   ├── products/           # Main product directory and detail pages
+│   │   │   └── wishlist/           # User wishlist overview
+│   │   ├── (WithDashboardLayout)/  # Dedicated dashboard layout with navigation drawer
+│   │   │   ├── admin/              # Admin dashboard pages (Analytics, Users, Blogs, Contacts)
+│   │   │   └── user/               # User dashboard pages (Products, Orders, Sales, Profile)
+│   │   ├── cancelled/              # Payment cancellation callback page
+│   │   ├── failed/                 # Payment failure callback page
+│   │   ├── success/                # Payment success callback page
+│   │   ├── login/                  # User login authentication page
+│   │   ├── register/               # User registration page
+│   │   ├── profile/                # Direct profile navigation route
+│   │   ├── globals.css             # Tailwind and global CSS styles
+│   │   ├── layout.tsx              # Root HTML wrapper with Redux and Theme providers
+│   │   └── not-found.tsx           # Custom 404 page
+│   ├── assets/                     # Graphical assets and static vector illustrations
+│   ├── components/                 # Modular React components
+│   │   ├── modules/                # Feature modules (Auth, Blog, Category, Checkout, Dashboard, Products)
+│   │   ├── shared/                 # Reusable shared components (Navbar, Footer, Container, NavigationLink)
+│   │   └── ui/                     # Primitives (Dialog, Dropdown, Table, Input, Button, Accordion)
+│   ├── constants/                  # Application constants and static configuration
+│   ├── hooks/                      # Custom React hooks
+│   ├── lib/                        # Helper utilities (cn class merger, date formatting)
+│   ├── providers/                  # Application-wide context and Redux store providers
+│   ├── redux/                      # Redux Toolkit store, persist setup, and feature slices
+│   │   ├── features/               # Slices (authSlice, wishlistSlice, getToken)
+│   │   ├── hooks.ts                # Typed useDispatch and useSelector hooks
+│   │   └── store.ts                # Redux store configuration
+│   ├── services/                   # Modular API service layer
+│   │   ├── Analytics/              # Dashboard metrics and reports
+│   │   ├── Auth/                   # Login, register, current user session retrieval
+│   │   ├── Blog/                   # Blog CRUD operations
+│   │   ├── Contact/                # Contact form submissions and inquiries
+│   │   ├── NewsLetter/             # Newsletter subscription services
+│   │   ├── Order/                  # Order placement and transaction history
+│   │   ├── Product/                # Product queries and listing mutations
+│   │   └── User/                   # User profile and account administration
+│   ├── types/                      # TypeScript type interfaces and declarations
+│   └── middleware.ts               # Next.js edge middleware for route protection
+├── .env.example                    # Template for environment configuration
+├── next.config.ts                  # Next.js build configuration
+├── package.json                    # Project dependencies and operational scripts
+├── tsconfig.json                   # TypeScript compiler options
+└── README.md                       # Comprehensive project documentation
 ```
 
 ---
 
-## ⚙️ Installation & Setup
+## Environment Variables
 
-### Steps to Setup
+To protect your system security, never commit real credentials, sensitive secrets, or production database URLs to public repositories.
 
-1. **Clone the repository**
-   ```sh
-   git clone https://github.com/Emam-Bokhari/ReSellBD-Client-
+Create a `.env.local` file in the root directory and configure the variables using the placeholder formats below:
+
+```env
+# Backend REST API Base URL
+NEXT_PUBLIC_BASE_API=enter your backend api base url here
+```
+
+---
+
+## Getting Started and Installation
+
+### Prerequisites
+
+Ensure the following tools are installed on your machine:
+- Node.js (version 18.18.0 or later recommended)
+- npm, yarn, or pnpm
+- Git
+
+### Installation Steps
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Emam-Bokhari/ReSellBD-Client-.git
    ```
-2. **Navigate to the project directory**
-   ```sh
+
+2. Navigate into the project directory:
+   ```bash
    cd ReSellBD-Client-
    ```
-3. **Install dependencies**
-   ```sh
+
+3. Install project dependencies:
+   ```bash
    npm install
    ```
-4. **Set up environment variables**
-   Update `.env` with:
-   ```env
-   NEXT_PUBLIC_BASE_API=https://re-sell-bd-server.vercel.app/api/v1
+
+4. Configure environment variables:
+   Copy the example file and update the placeholders with your target endpoints:
+   ```bash
+   cp .env.example .env.local
    ```
-5. **Start the development server**
-   ```sh
+   Open `.env.local` and set `NEXT_PUBLIC_BASE_API` to your active backend server address (for example, `http://localhost:5000/api/v1` during local development).
+
+5. Start the development server:
+   ```bash
    npm run dev
    ```
 
----
-
-## 🔧 Available Scripts
-
-| Command         | Description                       |
-| --------------- | --------------------------------- |
-| `npm run dev`   | Starts the development server     |
-| `npm run build` | Builds the project for production |
-| `npm run start` | Runs the production build         |
-| `npm run lint`  | Checks for linting errors         |
+6. Open the application:
+   Navigate to `http://localhost:3000` in your web browser.
 
 ---
 
-## 🌐 API Integration
+## Available Scripts
 
-- **Backend Base URL**: `NEXT_PUBLIC_BACKEND_URL`
-- **Endpoints Used:**
-  - `GET /listings` → Fetch all products
-  - `GET /listings/:id` → Fetch product details
-  - `PATCH /listings/:id` → Update product data
-  - `DELETE /listings/:id` → Delete product
-  - `POST /listings` → Add a new product
-  - `POST /transactions` → Place an order
+The following scripts are defined in `package.json` for development and production workflows:
 
----
-
-## 🔐 Authentication & Security
-
-- Custom Authentication is used for user login & registration.
-- JWT (JSON Web Token) is implemented for secure API calls.
-- Role-based access control (RBAC) for admin and users.
-- HTTPS enforced for secure communication.
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Runs the development server with Hot Module Replacement (HMR) on port 3000 |
+| `npm run build` | Compiles and optimizes the application for production deployment |
+| `npm run start` | Starts the production server using the compiled build artifacts |
+| `npm run lint` | Runs ESLint to check for code quality and syntax issues |
 
 ---
 
-## 📊 Admin Dashboard
+## API and Service Architecture
 
-- View, edit, and delete product listings.
-- Manage users and orders.
-- Ban users violating terms.
+All client interactions with the backend are structured inside `src/services/` to keep UI components decoupled from network logic:
 
----
-
-## 🎨 UI/UX Design
-
-- **Modern Design** - Uses ShadCN UI & Tailwind CSS for a clean, responsive layout.
-
----
-
-## 📞 Contact
-
-For queries or support, reach out at:
-
-📧 Email: moshfiqurrahman37@gmail.com
-
-🌎 [Facebook](https://www.facebook.com/emambokhari99)
+- Auth Service (`src/services/Auth`): Handles user registration, authentication, token storage, and session validation.
+- Product Service (`src/services/Product`): Handles product retrieval, single item details, category filters, and listing creation/updates.
+- Order Service (`src/services/Order`): Initiates checkouts, tracks purchase orders, and records sales history.
+- Analytics Service (`src/services/Analytics`): Retrieves overview statistics, revenue charts, and transaction counts for the admin dashboard.
+- Blog Service (`src/services/Blog`): Fetches blog posts, manages article drafts, and updates content.
+- Newsletter and Contact Services (`src/services/NewsLetter`, `src/services/Contact`): Manages customer feedback submissions and email newsletter subscriptions.
+- User Service (`src/services/User`): Facilitates user profile updates and admin-level account management.
 
 ---
 
-💡 **Happy Coding!** 🚀
+## Role-Based Access Control and Route Protection
+
+Route protection is managed by `src/middleware.ts` running at the Next.js edge:
+
+- Public Routes: Accessible to all visitors without authentication (Home, Products, Categories, Blogs, About Us, Contact Us, FAQ, Login, Register).
+- User Protected Routes: Requires valid authentication (`/user/*`, `/checkout`, `/profile`, `/user/dashboard/products`, `/user/dashboard/orders/*`).
+- Admin Protected Routes: Requires admin role credentials (`/admin/*`, `/admin/dashboard/*`, user administration, platform content management).
+
+Unauthenticated attempts to access protected routes are automatically redirected to `/login` with a `redirectPath` query parameter to return users to their intended destination after logging in.
+
+---
+
+## Contributing
+
+1. Fork the repository.
+2. Create a feature branch:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -m "Add feature description"
+   ```
+4. Push to the branch:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+5. Open a Pull Request for review.
+
+---
+
+## Contact and Support
+
+For questions, issues, or feedback regarding ReSellBD, please reach out through the following channels:
+
+- Email: moshfiqurrahman37@gmail.com
+- GitHub: https://github.com/Emam-Bokhari
+- Linkedin: www.linkedin.com/in/moshfiqurrahman37
